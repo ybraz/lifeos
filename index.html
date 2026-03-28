@@ -2410,7 +2410,7 @@
   (function() {
     // Hash SHA-256 da senha "telos2030" — trocar conforme desejado
     // Para mudar a senha: gerar novo hash em https://emn178.github.io/online-tools/sha256.html
-    const HASH = 'b3fa45c2e8a7d91f66234087c5b9e3a1d482f07c93e156ba28d4f7c0e85b612a';
+    const HASH = 'dcba5b564cd9fe7812e82ed2d80603446a4e5da87cc9c2b51d9f9c2a51d7a70f';
     async function sha256(msg) {
       const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
       return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
