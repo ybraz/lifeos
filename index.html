@@ -5,6 +5,79 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Life OS — Plano de Vida</title>
 <style>
+  /* ── LOCK SCREEN ── */
+  #lockscreen {
+    position: fixed;
+    inset: 0;
+    background: #0d0d0d;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  #lockscreen.hidden { display: none; }
+  .lock-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: #c9a84c;
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+  .lock-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #4a4540;
+    margin-top: -1.5rem;
+    text-align: center;
+  }
+  .lock-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .lock-input {
+    background: #141414;
+    border: 1px solid #252525;
+    border-radius: 6px;
+    color: #e8e4dc;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    padding: 0.75rem 1.25rem;
+    text-align: center;
+    letter-spacing: 0.15em;
+    outline: none;
+    width: 220px;
+    transition: border-color 0.2s;
+  }
+  .lock-input:focus { border-color: #7a6330; }
+  .lock-input.error { border-color: #8b3a3a; animation: shake 0.3s ease; }
+  .lock-btn {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 6px;
+    color: #c9a84c;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 0.6rem 2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .lock-btn:hover { background: rgba(201,168,76,0.15); border-color: rgba(201,168,76,0.4); }
+  .lock-hint { font-size: 0.7rem; color: #4a4540; font-family: 'Inter', sans-serif; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap');
 
   :root {
@@ -1123,6 +1196,17 @@
 </head>
 <body>
 
+<!-- LOCK SCREEN -->
+<div id="lockscreen">
+  <div class="lock-logo">Life OS</div>
+  <div class="lock-sub">Plano de Vida · Acesso restrito</div>
+  <div class="lock-form">
+    <input class="lock-input" id="lockInput" type="password" placeholder="••••••••" autocomplete="off" />
+    <button class="lock-btn" onclick="unlock()">Entrar</button>
+    <span class="lock-hint">Hoje, como sempre, escolho a Verdade.</span>
+  </div>
+</div>
+
 <!-- NAV -->
 <nav>
   <a href="#hero" class="nav-brand">Life OS</a>
@@ -1132,6 +1216,7 @@
     <li><a href="#threats">Ameaças</a></li>
     <li><a href="#controls">Controles</a></li>
     <li><a href="#projects">Projetos</a></li>
+    <li><a href="#rotina">Rotina</a></li>
     <li><a href="#necrologio">Legado</a></li>
   </ul>
 </nav>
@@ -2179,6 +2264,123 @@
   </div>
 </section>
 
+<!-- ROTINA DIÁRIA -->
+<section id="rotina">
+  <div class="section-header">
+    <span class="section-tag tag-gold">Rotina</span>
+    <h2 class="section-title">Arquitetura do Dia</h2>
+  </div>
+  <p class="section-subtitle">Quatro blocos que protegem os sistemas críticos. A estrutura que torna o florescimento possível.</p>
+
+  <div style="display:grid; grid-template-columns: repeat(2,1fr); gap:1rem; margin-bottom:2rem;">
+
+    <!-- BLOCO 1 -->
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden;">
+      <div style="padding:1.25rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:1rem;">
+        <span style="font-size:1.3rem">🌅</span>
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--text)">O Início</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:var(--text-dim); letter-spacing:0.1em">05h00 – 07h30</div>
+        </div>
+      </div>
+      <div style="padding:1.25rem 1.5rem;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">05h00</td><td style="padding:0.4rem 0; color:var(--text-muted)">Acordar · água · silêncio</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">05h10</td><td style="padding:0.4rem 0; color:var(--text)"><strong>Meditação</strong> (20 min)</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">05h30</td><td style="padding:0.4rem 0; color:var(--text)"><strong>Leitura filosófica</strong> (30 min)</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">06h00</td><td style="padding:0.4rem 0; color:var(--text-muted)">Diário — gratidão + intenção (10 min)</td></tr>
+          <tr><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">06h10</td><td style="padding:0.4rem 0; color:var(--text)"><strong>Treino de força</strong> (60–75 min)</td></tr>
+        </table>
+        <div style="margin-top:1rem; padding:0.6rem 0.85rem; background:rgba(201,168,76,0.04); border-left:2px solid var(--gold-dim); border-radius:0 4px 4px 0; font-size:0.75rem; color:var(--text-dim); font-style:italic">O mais importante é feito antes que o mundo acorde.</div>
+      </div>
+    </div>
+
+    <!-- BLOCO 2 -->
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden;">
+      <div style="padding:1.25rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:1rem;">
+        <span style="font-size:1.3rem">☀️</span>
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--text)">Trabalho & Profundidade</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:var(--text-dim); letter-spacing:0.1em">07h30 – 12h30</div>
+        </div>
+      </div>
+      <div style="padding:1.25rem 1.5rem;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">07h30</td><td style="padding:0.4rem 0; color:var(--text)"><strong>Deep Work técnico</strong> (90 min)</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">09h00</td><td style="padding:0.4rem 0; color:var(--text-muted)">Pausa ativa (10 min) — sem tela</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">09h10</td><td style="padding:0.4rem 0; color:var(--text-muted)">Trabalho profissional · reuniões</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">11h30</td><td style="padding:0.4rem 0; color:var(--text)"><strong>Sesta</strong> (15–20 min)</td></tr>
+          <tr><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">11h50</td><td style="padding:0.4rem 0; color:var(--text)"><strong>Meditação breve</strong> (10 min)</td></tr>
+        </table>
+        <div style="margin-top:1rem; padding:0.6rem 0.85rem; background:rgba(201,168,76,0.04); border-left:2px solid var(--gold-dim); border-radius:0 4px 4px 0; font-size:0.75rem; color:var(--text-dim); font-style:italic">Deep Work primeiro. A tarde começa como um segundo dia.</div>
+      </div>
+    </div>
+
+    <!-- BLOCO 3 -->
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden;">
+      <div style="padding:1.25rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:1rem;">
+        <span style="font-size:1.3rem">🌆</span>
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--text)">Tarde & Estudos</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:var(--text-dim); letter-spacing:0.1em">13h00 – 18h00</div>
+        </div>
+      </div>
+      <div style="padding:1.25rem 1.5rem;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">13h00</td><td style="padding:0.4rem 0; color:var(--text)"><strong>Estudo filosófico</strong> (45–60 min)</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">14h00</td><td style="padding:0.4rem 0; color:var(--text-muted)">Trabalho profissional · revisões</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">16h00</td><td style="padding:0.4rem 0; color:var(--text-muted)">Caminhada ao ar livre (20 min) · sem fone</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">16h20</td><td style="padding:0.4rem 0; color:var(--text-muted)">Trabalho livre · leitura · projeto autônomo</td></tr>
+          <tr><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">17h30</td><td style="padding:0.4rem 0; color:var(--text)"><strong>Fechamento do trabalho</strong> (15 min)</td></tr>
+        </table>
+        <div style="margin-top:1rem; padding:0.6rem 0.85rem; background:rgba(201,168,76,0.04); border-left:2px solid var(--gold-dim); border-radius:0 4px 4px 0; font-size:0.75rem; color:var(--text-dim); font-style:italic">Fechar o trabalho explicitamente. O lar começa às 18h.</div>
+      </div>
+    </div>
+
+    <!-- BLOCO 4 -->
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden;">
+      <div style="padding:1.25rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:1rem;">
+        <span style="font-size:1.3rem">🌙</span>
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--text)">A Noite</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:var(--text-dim); letter-spacing:0.1em">18h00 – 22h30</div>
+        </div>
+      </div>
+      <div style="padding:1.25rem 1.5rem;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">18h00</td><td style="padding:0.4rem 0; color:var(--text)"><strong>Tempo de família</strong> — presença real</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">19h00</td><td style="padding:0.4rem 0; color:var(--text)"><strong>Jantar em família</strong> · à mesa · sem telas</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">19h45</td><td style="padding:0.4rem 0; color:var(--text-muted)">Ioga ou mobilidade (20–30 min)</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">20h15</td><td style="padding:0.4rem 0; color:var(--text-muted)">Banho em baixa luz · música calma</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">21h30</td><td style="padding:0.4rem 0; color:var(--text-muted)">Literatura (30 min)</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">22h00</td><td style="padding:0.4rem 0; color:var(--text)"><strong>Exame de consciência</strong> (10 min)</td></tr>
+          <tr><td style="padding:0.4rem 0; color:var(--gold-dim); font-family:'JetBrains Mono',monospace; font-size:0.65rem; white-space:nowrap; padding-right:0.75rem">22h30</td><td style="padding:0.4rem 0; color:var(--text-muted)">Sono · meta 7h–7h30</td></tr>
+        </table>
+        <div style="margin-top:1rem; padding:0.6rem 0.85rem; background:rgba(201,168,76,0.04); border-left:2px solid var(--gold-dim); border-radius:0 4px 4px 0; font-size:0.75rem; color:var(--text-dim); font-style:italic">A noite tem sua própria arquitetura. Família primeiro, sempre.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Invioláveis -->
+  <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:1.5rem 2rem;">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); margin-bottom:1rem">Regras invioláveis</div>
+    <div style="display:flex; gap:1.5rem; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; gap:0.6rem; font-size:0.82rem; color:var(--text-muted)">
+        <span style="width:6px; height:6px; border-radius:50%; background:var(--gold); flex-shrink:0"></span>
+        Meditação matinal — mínimo 10 min, sem exceção
+      </div>
+      <div style="display:flex; align-items:center; gap:0.6rem; font-size:0.82rem; color:var(--text-muted)">
+        <span style="width:6px; height:6px; border-radius:50%; background:var(--gold); flex-shrink:0"></span>
+        Jantar em família — mínimo 5 noites/semana
+      </div>
+      <div style="display:flex; align-items:center; gap:0.6rem; font-size:0.82rem; color:var(--text-muted)">
+        <span style="width:6px; height:6px; border-radius:50%; background:var(--gold); flex-shrink:0"></span>
+        Sono antes das 23h — o restante se ajusta antes disso
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- NECROLÓGIO -->
 <div id="necrologio">
   <div class="necrologio-inner">
@@ -2204,6 +2406,40 @@
 </footer>
 
 <script>
+  // ── LOCK SCREEN ──
+  (function() {
+    // Hash SHA-256 da senha "telos2030" — trocar conforme desejado
+    // Para mudar a senha: gerar novo hash em https://emn178.github.io/online-tools/sha256.html
+    const HASH = 'b3fa45c2e8a7d91f66234087c5b9e3a1d482f07c93e156ba28d4f7c0e85b612a';
+    async function sha256(msg) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+    const SESSION_KEY = 'lifeos_unlocked';
+    // Verificar sessão ativa (dura 8 horas)
+    const saved = sessionStorage.getItem(SESSION_KEY);
+    if (saved && Date.now() - parseInt(saved) < 8 * 60 * 60 * 1000) {
+      document.getElementById('lockscreen').classList.add('hidden');
+    }
+    window.unlock = async function() {
+      const input = document.getElementById('lockInput');
+      const h = await sha256(input.value.trim());
+      if (h === HASH) {
+        sessionStorage.setItem(SESSION_KEY, Date.now().toString());
+        document.getElementById('lockscreen').classList.add('hidden');
+      } else {
+        input.classList.add('error');
+        input.value = '';
+        setTimeout(() => input.classList.remove('error'), 600);
+        input.focus();
+      }
+    };
+    document.addEventListener('DOMContentLoaded', () => {
+      const inp = document.getElementById('lockInput');
+      if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') window.unlock(); });
+    });
+  })();
+
   // ── TOGGLE FUNCTIONS ──
   function togglePillar(el) {
     el.classList.toggle('expanded');
