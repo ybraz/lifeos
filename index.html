@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life OS — Plano de Vida</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap');
+
+  :root {
+    --bg: #0d0d0d;
+    --surface: #141414;
+    --surface2: #1a1a1a;
+    --border: #252525;
+    --border-glow: #2e2e2e;
+    --text: #e8e4dc;
+    --text-muted: #6b6560;
+    --text-dim: #4a4540;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: #7a6330;
+    --red: #8b3a3a;
+    --red-light: #c4605e;
+    --green: #3a6b4a;
+    --green-light: #6aaa80;
+    --amber: #8b6a2a;
+    --amber-light: #d4a843;
+    --c1: #6b5a8a;
+    --c2: #3a6b7a;
+    --c3: #6b3a3a;
+    --c4: #3a5a3a;
+    --c5: #5a4a2a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── GRAIN TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(13,13,13,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+
+  .nav-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.65rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: var(--text);
+    background: var(--surface2);
+  }
+
+  .nav-links a.active {
+    color: var(--gold);
+    background: rgba(201,168,76,0.08);
+  }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 60%, rgba(201,168,76,0.05) 0%, transparent 70%),
+      radial-gradient(ellipse 80% 40% at 50% 100%, rgba(201,168,76,0.04) 0%, transparent 60%);
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 2rem;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .hero-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    line-height: 1.6;
+  }
+
+  .hero-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--gold);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 3rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--text-dim), transparent);
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .tag-c1 { background: rgba(107,90,138,0.15); color: #a08bc0; border: 1px solid rgba(107,90,138,0.3); }
+  .tag-c2 { background: rgba(58,107,122,0.15); color: #7ab8c8; border: 1px solid rgba(58,107,122,0.3); }
+  .tag-c3 { background: rgba(107,58,58,0.15); color: #c08080; border: 1px solid rgba(107,58,58,0.3); }
+  .tag-c4 { background: rgba(58,90,58,0.15); color: #80b080; border: 1px solid rgba(58,90,58,0.3); }
+  .tag-c5 { background: rgba(90,74,42,0.15); color: #c0a070; border: 1px solid rgba(90,74,42,0.3); }
+  .tag-gold { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.25); }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--text);
+  }
+
+  .section-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-top: -2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ── MISSION ── */
+  .mission-statement {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 3rem;
+    padding: 2rem 2.5rem;
+    border-left: 2px solid var(--gold);
+    background: linear-gradient(to right, rgba(201,168,76,0.04), transparent);
+  }
+
+  .telos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .telos-card {
+    padding: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .telos-card:hover {
+    border-color: var(--gold-dim);
+    transform: translateY(-2px);
+  }
+
+  .telos-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .telos-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .telos-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+
+  .telos-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .telos-items li {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .telos-items li::before {
+    content: '—';
+    color: var(--text-dim);
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+  }
+
+  /* ── PILARES ── */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .pillar-card {
+    padding: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pillar-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.03) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .pillar-card:hover::before { opacity: 1; }
+  .pillar-card:hover { border-color: var(--gold-dim); }
+
+  .pillar-card.expanded { border-color: var(--gold-dim); }
+
+  .pillar-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .pillar-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    width: 24px;
+    text-align: right;
+  }
+
+  .pillar-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .pillar-excerpt {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    padding-left: 2.25rem;
+  }
+
+  .pillar-body {
+    display: none;
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    padding-left: 2.25rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 0.75rem;
+  }
+
+  .pillar-card.expanded .pillar-excerpt { display: none; }
+  .pillar-card.expanded .pillar-body { display: block; }
+
+  /* ── ROLES ── */
+  .roles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .role-item {
+    background: var(--surface);
+    padding: 1.5rem 2rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: grid;
+    grid-template-columns: 2.5rem 1fr auto;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .role-item:hover { background: var(--surface2); }
+
+  .role-icon { font-size: 1.4rem; text-align: center; }
+
+  .role-info {}
+
+  .role-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .role-success {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+  }
+
+  .role-chevron {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    transition: transform 0.3s;
+  }
+
+  .role-detail {
+    display: none;
+    padding: 0 2rem 1.5rem;
+    background: var(--surface);
+  }
+
+  .role-detail-inner {
+    padding: 1.25rem;
+    background: var(--bg);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .role-detail-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    font-size: 0.83rem;
+  }
+
+  .role-detail-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+  }
+
+  .role-detail-text { color: var(--text-muted); line-height: 1.6; }
+
+  .role-item.open .role-chevron { transform: rotate(90deg); }
+
+  /* ── DOMAINS ── */
+  .domains-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .domain-card {
+    padding: 1.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: all 0.3s;
+  }
+
+  .domain-card:hover {
+    border-color: var(--border-glow);
+    transform: translateY(-2px);
+  }
+
+  .domain-icon { font-size: 1.5rem; margin-bottom: 1rem; }
+
+  .domain-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+  }
+
+  .domain-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  .domain-principle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* ── OKRs ── */
+  .okr-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .okr-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .okr-header {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .okr-header:hover { background: var(--surface2); }
+
+  .okr-domain-badge {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .okr-objective {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .okr-body {
+    display: none;
+    padding: 0 1.5rem 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .okr-item.open .okr-body { display: block; }
+
+  .kr-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .kr-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    font-size: 0.83rem;
+    color: var(--text-muted);
+  }
+
+  .kr-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    padding-top: 0.15rem;
+    white-space: nowrap;
+  }
+
+  .kr-score {
+    display: flex;
+    gap: 2px;
+    margin-top: 1rem;
+  }
+
+  .kr-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border-glow);
+  }
+
+  /* ── THREAT MODEL ── */
+  .threat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .threat-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .threat-item:hover { border-color: var(--border-glow); }
+
+  .threat-header {
+    padding: 1rem 1.5rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .threat-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+
+  .threat-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .risk-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+  }
+
+  .risk-critical { background: rgba(139,58,58,0.2); color: #e08080; border: 1px solid rgba(139,58,58,0.4); }
+  .risk-high { background: rgba(139,106,42,0.2); color: #e0b060; border: 1px solid rgba(139,106,42,0.4); }
+  .risk-medium { background: rgba(58,90,58,0.2); color: #80b080; border: 1px solid rgba(58,90,58,0.4); }
+
+  .threat-body {
+    display: none;
+    padding: 0 1.5rem 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .threat-item.open .threat-body { display: block; }
+
+  .threat-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+    font-size: 0.82rem;
+  }
+
+  .threat-detail-box {
+    background: var(--bg);
+    padding: 0.9rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .threat-detail-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 0.35rem;
+  }
+
+  .threat-detail-value { color: var(--text-muted); line-height: 1.6; }
+
+  /* ── CONTROLS ── */
+  .controls-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+
+  .ctrl-tab {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+  }
+
+  .ctrl-tab:hover { color: var(--text); }
+  .ctrl-tab.active { color: var(--green-light); border-bottom-color: var(--green-light); }
+
+  .ctrl-panel { display: none; }
+  .ctrl-panel.active { display: block; }
+
+  .control-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .control-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .control-header {
+    padding: 1.1rem 1.5rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    transition: background 0.2s;
+  }
+
+  .control-header:hover { background: var(--surface2); }
+
+  .control-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green-light);
+    letter-spacing: 0.08em;
+  }
+
+  .control-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .control-body {
+    display: none;
+    padding: 0 1.5rem 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .control-item.open .control-body { display: block; }
+
+  .control-target {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .control-target span {
+    background: rgba(58,90,58,0.1);
+    color: var(--green-light);
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    margin-right: 0.3rem;
+    font-size: 0.7rem;
+    border: 1px solid rgba(58,90,58,0.2);
+  }
+
+  .control-protocol {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .control-rule {
+    margin-top: 0.75rem;
+    padding: 0.7rem 1rem;
+    background: rgba(58,90,58,0.06);
+    border-left: 2px solid var(--green);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ── RUNBOOK ── */
+  .runbook-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .runbook-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .runbook-header {
+    padding: 1.1rem 1.5rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    transition: background 0.2s;
+  }
+
+  .runbook-header:hover { background: var(--surface2); }
+
+  .runbook-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--amber-light);
+    letter-spacing: 0.08em;
+  }
+
+  .runbook-name { font-size: 0.9rem; font-weight: 500; color: var(--text); }
+
+  .runbook-body {
+    display: none;
+    padding: 0 1.5rem 1.25rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .runbook-item.open .runbook-body { display: block; }
+
+  .filter-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .filter-steps li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--amber-light);
+    background: rgba(90,74,42,0.15);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+  }
+
+  /* ── PROJECTS ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .project-card:hover { border-color: var(--border-glow); transform: translateY(-2px); }
+
+  .project-card-header {
+    padding: 1.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .project-card-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.75rem;
+  }
+
+  .project-card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+
+  .project-card-problem {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .project-card-body { padding: 1.5rem 1.75rem; }
+
+  .project-phases {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .phase-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    font-size: 0.82rem;
+  }
+
+  .phase-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--gold-dim);
+    background: rgba(201,168,76,0.06);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    white-space: nowrap;
+    border: 1px solid rgba(201,168,76,0.12);
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+  }
+
+  .phase-text { color: var(--text-muted); line-height: 1.5; }
+
+  /* ── ROADMAP ── */
+  .roadmap-timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .roadmap-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.35rem;
+    top: 0.5rem;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold-dim), transparent);
+  }
+
+  .timeline-year {
+    position: relative;
+    margin-bottom: 2.5rem;
+  }
+
+  .year-dot {
+    position: absolute;
+    left: -1.725rem;
+    top: 0.5rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 8px rgba(201,168,76,0.4);
+  }
+
+  .year-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .year-theme {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .year-milestones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .milestone-chip {
+    font-size: 0.77rem;
+    padding: 0.3rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+
+  .milestone-chip:hover {
+    border-color: var(--gold-dim);
+    color: var(--text);
+  }
+
+  /* ── NECROLOGIO ── */
+  #necrologio {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .necrologio-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+    text-align: center;
+  }
+
+  .necrologio-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 2.5rem;
+  }
+
+  .necrologio-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: var(--text-muted);
+    text-align: left;
+  }
+
+  .necrologio-text p + p { margin-top: 1.25rem; }
+
+  .necrologio-final {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--gold);
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--text-dim);
+  }
+
+  .footer-meta {
+    margin-top: 1rem;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── UTILITIES ── */
+  .chevron {
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    transition: transform 0.3s;
+  }
+  .open .chevron { transform: rotate(90deg); }
+
+  p-body {
+    display: block;
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 3rem 0;
+  }
+
+  @media (max-width: 768px) {
+    .telos-grid, .domains-grid { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .threat-detail-grid { grid-template-columns: 1fr; }
+    .role-detail-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-brand">Life OS</a>
+  <ul class="nav-links">
+    <li><a href="#foundations">Fundação</a></li>
+    <li><a href="#architecture">Arquitetura</a></li>
+    <li><a href="#threats">Ameaças</a></li>
+    <li><a href="#controls">Controles</a></li>
+    <li><a href="#projects">Projetos</a></li>
+    <li><a href="#necrologio">Legado</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">Life OS · v1.0 · 2026-03-28</div>
+  <h1 class="hero-title">Plano de<br><em>Vida</em></h1>
+  <p class="hero-tagline">Um empreendimento sem fim. Arquitetura, processos, controles e projetos para entregar valor de forma consistente ao longo do tempo.</p>
+  <blockquote class="hero-quote">
+    "Hoje, como sempre, escolho a Verdade, o Bem e o Belo."
+  </blockquote>
+  <div class="hero-scroll">
+    <span>Explorar</span>
+    <div class="scroll-line"></div>
+  </div>
+</div>
+
+<!-- CAMADA 1 — FOUNDATIONS -->
+<section id="foundations">
+  <div class="section-header">
+    <span class="section-tag tag-c1">Camada 1</span>
+    <h2 class="section-title">Foundations</h2>
+  </div>
+
+  <!-- MISSÃO -->
+  <div class="mission-statement">
+    Viver com integridade, contemplação e presença — cultivando a Verdade, o Bem e o Belo em cada escolha, relação e obra que deixo no mundo.
+  </div>
+
+  <!-- TELOS -->
+  <p class="section-subtitle">O Télos — três movimentos inseparáveis</p>
+  <div class="telos-grid">
+    <div class="telos-card">
+      <div class="telos-icon">🔥</div>
+      <div class="telos-name">Integridade</div>
+      <div class="telos-subtitle">relação consigo</div>
+      <ul class="telos-items">
+        <li>Não envenenar (corpo e mente)</li>
+        <li>Cultivar o corpo (sono, comida, movimento)</li>
+        <li>Cultivar a mente (estudo, escrita, literatura)</li>
+      </ul>
+    </div>
+    <div class="telos-card">
+      <div class="telos-icon">🙏</div>
+      <div class="telos-name">Contemplação</div>
+      <div class="telos-subtitle">relação com Deus</div>
+      <ul class="telos-items">
+        <li>Silêncio e oração</li>
+        <li>Leitura sagrada</li>
+        <li>Exame de consciência</li>
+      </ul>
+    </div>
+    <div class="telos-card">
+      <div class="telos-icon">🤝</div>
+      <div class="telos-name">Presença</div>
+      <div class="telos-subtitle">relação com o outro</div>
+      <ul class="telos-items">
+        <li>Atenção real nas relações</li>
+        <li>Um ato de serviço concreto</li>
+        <li>Palavra justa e verdadeira</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PILARES -->
+  <p class="section-subtitle">Os Dez Pilares — clique para expandir</p>
+  <div class="pillars-grid" id="pillarsGrid">
+
+    <div class="pillar-card" onclick="togglePillar(this)">
+      <div class="pillar-header">
+        <span class="pillar-number">I</span>
+        <span class="pillar-name">Vida</span>
+      </div>
+      <div class="pillar-excerpt">Existir sem esforço, em harmonia com o fluxo da criação. A felicidade não é o objetivo — a liberdade de ser é.</div>
+      <div class="pillar-body">Entenda que tudo é impessoal e existe diferença entre o "eu" e a "mente". A vida não é uma busca pela felicidade, mas sim uma busca pela liberdade de existir sem esforço, em harmonia com o restante da criação. Entregue-se, e não resista. Conecte-se de forma genuína com o mundo ao redor, compreendendo a própria essência. Tenha coragem emocional para fazer o que precisa ser feito. Elimine a lacuna de valores entre o que acredita e o que faz. Tenha gratidão, por tudo.</div>
+    </div>
+
+    <div class="pillar-card" onclick="togglePillar(this)">
+      <div class="pillar-header">
+        <span class="pillar-number">II</span>
+        <span class="pillar-name">Evolução</span>
+      </div>
+      <div class="pillar-excerpt">Crie restrições. Abrace o estressor. Questione convicções. Só estando disposto a falhar estou disposto a agir.</div>
+      <div class="pillar-body">Crie restrições para si mesmo. Permita a aleatoriedade, aprecie agentes estressores, tenha camadas de redundância. Questione suas convicções — é melhor presumir ignorância do que presumir conhecimento suficiente. É preciso aceitar ser um iniciante para poder transcendê-lo. Sempre estabeleça objetivos nos quais você tem de 50% a 70% de chance de sucesso. Peça feedback constantemente. Reconheça o sofrimento e o esforço como parte do processo. Seja selvagem.</div>
+    </div>
+
+    <div class="pillar-card" onclick="togglePillar(this)">
+      <div class="pillar-header">
+        <span class="pillar-number">III</span>
+        <span class="pillar-name">Saúde</span>
+      </div>
+      <div class="pillar-excerpt">O corpo é templo e alavanca. Movimento, sono, nutrição e crioterapia não são disciplinas — são o piso mínimo.</div>
+      <div class="pillar-body">Mantenha o corpo em movimento o máximo que puder. Pratique HIIT e musculação. Crioterapia com frequência. Durma no mínimo 7 e no máximo 8 horas, com consistência de horário. Nutra o corpo com alimentos naturais, da região e da estação. Coma vagarosamente, até ficar 80% cheio. Faça jejum intermitente de 18 por 6 todas as semanas. Apoie a preparação da refeição, sempre coma à mesa.</div>
+    </div>
+
+    <div class="pillar-card" onclick="togglePillar(this)">
+      <div class="pillar-header">
+        <span class="pillar-number">IV</span>
+        <span class="pillar-name">Profissão</span>
+      </div>
+      <div class="pillar-excerpt">Artesanato, não produtividade. Valor, não volume. Deep Work como modo padrão. Nunca reclamar — jamais.</div>
+      <div class="pillar-body">Busque agregar valor a todas as atividades. Realize o trabalho com o cuidado de um artesão. Mantenha um mindset de crescimento — considere primeiro o futuro, o aprendizado, a contribuição, a performance, a gratidão, a alegria, a cooperação, a confiança, o propósito. Concentre-se em apenas uma única atividade, buscando não fragmentar a atenção. Entre em estado de flow. Não reclame, NUNCA.</div>
+    </div>
+
+    <div class="pillar-card" onclick="togglePillar(this)">
+      <div class="pillar-header">
+        <span class="pillar-number">V</span>
+        <span class="pillar-name">Disciplina</span>
+      </div>
+      <div class="pillar-excerpt">Detestar a mediocridade. Fazer o que tem que ser feito. O conforto enfraquece; o prazer imediato escraviza.</div>
+      <div class="pillar-body">Deteste a mediocridade de todo seu ser. Simplesmente faça o que tem que ser feito. Não busque nem aceite atalhos. Aceite — e goste — da dor necessária para atingir um propósito. Sempre comece pela tarefa mais difícil. Assuma a responsabilidade pela vida sem exceções — não criticando, não reclamando, não buscando culpados, não se fazendo de vítima. Não aceite prazeres imediatos pois eles envenenam sua mente.</div>
+    </div>
+
+    <div class="pillar-card" onclick="togglePillar(this)">
+      <div class="pillar-header">
+        <span class="pillar-number">VI</span>
+        <span class="pillar-name">Arte</span>
+      </div>
+      <div class="pillar-excerpt">A beleza transcende a realidade e revela significado. O belo é imperfeito, impermanente, incompleto — wabi-sabi.</div>
+      <div class="pillar-body">Saiba que a beleza transcende a realidade e nos mostra um significado maior para o mundo que nos cerca, amplificando nossas alegrias e redimindo nosso sofrimento. A arte serve para compreender, suportar e transformar a realidade, bem como desenvolver a autoconsciência, a sensibilidade e o pensamento crítico. Aceite que o belo é imperfeito, impermanente e incompleto — wabi-sabi.</div>
+    </div>
+
+    <div class="pillar-card" onclick="togglePillar(this)">
+      <div class="pillar-header">
+        <span class="pillar-number">VII</span>
+        <span class="pillar-name">Medo</span>
+      </div>
+      <div class="pillar-excerpt">Todos os sentimentos negativos derivam do medo. Para enfraquecer o medo: momento presente, desapego, curiosidade.</div>
+      <div class="pillar-body">Reduza o medo e aumente a confiança em todos os aspectos da vida. Todos os sentimentos negativos derivam do medo — e o medo deriva do ego. Ele te impede de ser criativo, de fazer o que tem que ser feito, de ser corajoso, moral e produtivo. Para enfraquecer o medo: coloque-se no momento presente, não se apegue ao que não pode mudar, transforme expectativas em preferências. A única ação errada é não agir.</div>
+    </div>
+
+    <div class="pillar-card" onclick="togglePillar(this)">
+      <div class="pillar-header">
+        <span class="pillar-number">VIII</span>
+        <span class="pillar-name">Quietude</span>
+      </div>
+      <div class="pillar-excerpt">Respirar. Observar sem julgar. Não conquistar a mente — habitá-la. Acolher a si mesmo tal como é.</div>
+      <div class="pillar-body">Respire. Afaste-se da experiência e seja o observador de si mesmo, apenas no momento presente. Não tente impedir os próprios pensamentos — a mente não pode ser conquistada. Sempre se perdoe e sempre se permita recomeçar. Aceite todos os sentimentos sem julgamentos; acolha a si mesmo tal como é. Acolha o presente sem julgá-lo. Perdoe o agora. Pratique o desapego de tudo que não pode ser controlado.</div>
+    </div>
+
+    <div class="pillar-card" onclick="togglePillar(this)">
+      <div class="pillar-header">
+        <span class="pillar-number">IX</span>
+        <span class="pillar-name">Espiritualidade</span>
+      </div>
+      <div class="pillar-excerpt">Reconhecer-me parte de uma Consciência maior. Reduzir pensamentos, aumentar presença. Aceitar a impermanência.</div>
+      <div class="pillar-body">Reconheça a si mesmo como parte de uma Consciência Ilimitada, não valorizando a individualidade de si, mas a comunhão com todos os seres existentes. Reduza os pensamentos e procure viver mais — conecte-se com o mundo ao redor através dos sentidos. Viva em paz consigo mesmo, praticando boas ações, desenvolvendo virtudes e aproveitando a jornada da vida, sem se preocupar com explicações para os grandes mistérios.</div>
+    </div>
+
+    <div class="pillar-card" onclick="togglePillar(this)">
+      <div class="pillar-header">
+        <span class="pillar-number">X</span>
+        <span class="pillar-name">Essencialismo</span>
+      </div>
+      <div class="pillar-excerpt">Só o essencial. Uma prioridade por vez. Menos, porém melhor. Saber dizer não é o que torna o sim significativo.</div>
+      <div class="pillar-body">Escolha apenas o essencial e diga não para todo o resto. Tenha apenas uma prioridade por vez. Compreenda que só é realmente livre aquele que sabe estabelecer limites. Esvazie-se de tudo o que não é essencial para se permitir conectar com o mundo ao redor com mais simplicidade. Expurgue tudo que não é essencial para encontrar a essência do Belo e da Verdade. Menos, porém melhor.</div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <!-- PAPÉIS -->
+  <p class="section-subtitle">Papéis Ativos — os serviços que rodo em paralelo</p>
+  <div class="roles-list" id="rolesList">
+
+    <div class="role-item" onclick="toggleRole(this)">
+      <div class="role-icon">🧭</div>
+      <div class="role-info">
+        <div class="role-name">O Filósofo-Praticante</div>
+        <div class="role-success">Estudo diário · diário filosófico ativo · ensinamentos nas decisões concretas</div>
+      </div>
+      <span class="role-chevron">▶</span>
+    </div>
+    <div class="role-detail">
+      <div class="role-detail-inner">
+        <div class="role-detail-row">
+          <div>
+            <div class="role-detail-label">O que faz</div>
+            <div class="role-detail-text">Estuda, medita, examina a consciência, busca a Verdade, o Bem e o Belo de forma sistemática. Platão em 2026, os clássicos como método de vida, não como curiosidade.</div>
+          </div>
+          <div>
+            <div class="role-detail-label">Risco de degradação</div>
+            <div class="role-detail-text">Consumo passivo de conteúdo substituindo o estudo ativo; intelectualismo sem prática.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="role-item" onclick="toggleRole(this)">
+      <div class="role-icon">💪</div>
+      <div class="role-info">
+        <div class="role-name">O Atleta Disciplinado</div>
+        <div class="role-success">Treino 5x/semana · sono 7-8h · protocolo de saúde sem negociação</div>
+      </div>
+      <span class="role-chevron">▶</span>
+    </div>
+    <div class="role-detail">
+      <div class="role-detail-inner">
+        <div class="role-detail-row">
+          <div>
+            <div class="role-detail-label">O que faz</div>
+            <div class="role-detail-text">Mantém o corpo como templo e alavanca. Treino de força 5x/semana, sono 7-8h consistente, nutrição estratégica, crioterapia, jejum intermitente 18:6.</div>
+          </div>
+          <div>
+            <div class="role-detail-label">Risco de degradação</div>
+            <div class="role-detail-text">Trabalho ou compromissos invadindo o tempo de treino; justificativas de exceção que viram regra.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="role-item" onclick="toggleRole(this)">
+      <div class="role-icon">🔐</div>
+      <div class="role-info">
+        <div class="role-name">O Especialista em Segurança</div>
+        <div class="role-success">Web Pentest + Python + ML · competência rara · autoridade reconhecida</div>
+      </div>
+      <span class="role-chevron">▶</span>
+    </div>
+    <div class="role-detail">
+      <div class="role-detail-inner">
+        <div class="role-detail-row">
+          <div>
+            <div class="role-detail-label">O que faz</div>
+            <div class="role-detail-text">Domina Web Penetration Testing + Python + ML aplicado a assessments. Constrói competência rara e de alto valor que o posiciona fora da competição de commodities.</div>
+          </div>
+          <div>
+            <div class="role-detail-label">Risco de degradação</div>
+            <div class="role-detail-text">Dispersão em múltiplas tecnologias; foco em quantidade de estudo em vez de profundidade.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="role-item" onclick="toggleRole(this)">
+      <div class="role-icon">👨‍👩‍👧‍👦</div>
+      <div class="role-info">
+        <div class="role-name">O Pai e Marido Presente</div>
+        <div class="role-success">Rituais familiares · presença real · casamento como parceria de valores</div>
+      </div>
+      <span class="role-chevron">▶</span>
+    </div>
+    <div class="role-detail">
+      <div class="role-detail-inner">
+        <div class="role-detail-row">
+          <div>
+            <div class="role-detail-label">O que faz</div>
+            <div class="role-detail-text">Constrói com a esposa um lar de amor, valores sólidos e busca pela Verdade. Está presente de fato com Victor Hugo e Isadora — não apenas fisicamente, mas com atenção real.</div>
+          </div>
+          <div>
+            <div class="role-detail-label">Risco de degradação</div>
+            <div class="role-detail-text">Presença física sem presença real; trabalho e ambição consumindo o tempo e a energia do lar.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="role-item" onclick="toggleRole(this)">
+      <div class="role-icon">🏗️</div>
+      <div class="role-info">
+        <div class="role-name">O Construtor de Autonomia</div>
+        <div class="role-success">50k aportes 2026 · renda passiva · casa própria 2030</div>
+      </div>
+      <span class="role-chevron">▶</span>
+    </div>
+    <div class="role-detail">
+      <div class="role-detail-inner">
+        <div class="role-detail-row">
+          <div>
+            <div class="role-detail-label">O que faz</div>
+            <div class="role-detail-text">Move progressivamente do emprego convencional para um modelo autônomo e sereno — cursos online de cybersecurity como fonte de renda que respeita o tempo e preserva a paz.</div>
+          </div>
+          <div>
+            <div class="role-detail-label">Risco de degradação</div>
+            <div class="role-detail-text">Conforto do salário fixo impedindo o movimento; empreendimento em larga escala desalinhado com os valores de serenidade.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="role-item" onclick="toggleRole(this)">
+      <div class="role-icon">🧘</div>
+      <div class="role-info">
+        <div class="role-name">O Contemplativo</div>
+        <div class="role-success">Rotina espiritual inabalável · serenidade como estado-base</div>
+      </div>
+      <span class="role-chevron">▶</span>
+    </div>
+    <div class="role-detail">
+      <div class="role-detail-inner">
+        <div class="role-detail-row">
+          <div>
+            <div class="role-detail-label">O que faz</div>
+            <div class="role-detail-text">Pratica meditação diária, ioga, exame de consciência, leitura sagrada. Habita o silêncio como lar, não como ausência.</div>
+          </div>
+          <div>
+            <div class="role-detail-label">Risco de degradação</div>
+            <div class="role-detail-text">A rotina espiritual sendo a primeira coisa sacrificada quando o dia fica cheio.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CAMADA 2 — CORE ARCHITECTURE -->
+<section id="architecture">
+  <div class="section-header">
+    <span class="section-tag tag-c2">Camada 2</span>
+    <h2 class="section-title">Core Architecture</h2>
+  </div>
+
+  <!-- DOMÍNIOS -->
+  <p class="section-subtitle">Os seis domínios do sistema</p>
+  <div class="domains-grid">
+    <div class="domain-card">
+      <div class="domain-icon">🔥</div>
+      <div class="domain-label">Soma</div>
+      <div class="domain-name">Saúde & Energia</div>
+      <div class="domain-principle">A base biológica de tudo. Gerar voltagem para agir. A lógica é de Mecânica: demanda alta o suficiente para forçar adaptação.</div>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">🧠</div>
+      <div class="domain-label">Logos</div>
+      <div class="domain-name">Mente & Conhecimento</div>
+      <div class="domain-principle">Voltar à fonte original da sabedoria para estruturar o pensamento crítico e reduzir a ansiedade.</div>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">🙏</div>
+      <div class="domain-label">Pneuma</div>
+      <div class="domain-name">Espírito & Contemplação</div>
+      <div class="domain-principle">A serenidade espiritual é o estado-base que torna tudo o mais possível. Sem ela, a disciplina vira tensão.</div>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">💎</div>
+      <div class="domain-label">Ergon</div>
+      <div class="domain-name">Profissão & Contribuição</div>
+      <div class="domain-principle">Especialização radical que torna o trabalho arte e gera autoridade. Deep Work como modo padrão.</div>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">🏠</div>
+      <div class="domain-label">Oikos</div>
+      <div class="domain-name">Família & Lar</div>
+      <div class="domain-principle">O núcleo afetivo e o projeto de civilização mínima. Onde os valores são vividos, não apenas professados.</div>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">🪙</div>
+      <div class="domain-label">Ktema</div>
+      <div class="domain-name">Finanças & Autonomia</div>
+      <div class="domain-principle">Capital suficiente para escolher como e com quem trabalhar. A alavanca de liberdade.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- OKRs -->
+  <p class="section-subtitle">Life OKRs 2026 — clique para ver os Key Results</p>
+  <div class="okr-list">
+
+    <div class="okr-item" onclick="toggleOkr(this)">
+      <div class="okr-header">
+        <div class="okr-domain-badge" style="background:#e08080"></div>
+        <div class="okr-objective">O1 — Consolidar a base biológica de alta performance</div>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="okr-body">
+        <ul class="kr-list">
+          <li class="kr-item"><span class="kr-num">KR1</span> Treino de força 5x/semana por pelo menos 40 semanas do ano</li>
+          <li class="kr-item"><span class="kr-num">KR2</span> Peso e % gordura corporal em faixa saudável (definir linha de base)</li>
+          <li class="kr-item"><span class="kr-num">KR3</span> Sono médio de 7-8h/noite em ≥ 80% das noites</li>
+          <li class="kr-item"><span class="kr-num">KR4</span> Protocolo de crioterapia implementado e praticado ≥ 3x/semana</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="okr-item" onclick="toggleOkr(this)">
+      <div class="okr-header">
+        <div class="okr-domain-badge" style="background:#7ab8c8"></div>
+        <div class="okr-objective">O2 — Tornar-me especialista de referência em Web Penetration Testing</div>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="okr-body">
+        <ul class="kr-list">
+          <li class="kr-item"><span class="kr-num">KR1</span> Concluir trilha estruturada de Web Pentest</li>
+          <li class="kr-item"><span class="kr-num">KR2</span> Realizar ≥ 2 assessments reais documentados</li>
+          <li class="kr-item"><span class="kr-num">KR3</span> Dominar Python suficiente para automatizar ≥ 3 scripts de pentest</li>
+          <li class="kr-item"><span class="kr-num">KR4</span> Aportar R$ 50k em investimentos até dezembro</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="okr-item" onclick="toggleOkr(this)">
+      <div class="okr-header">
+        <div class="okr-domain-badge" style="background:#a08bc0"></div>
+        <div class="okr-objective">O3 — Aprofundar o pensamento através de Platão</div>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="okr-body">
+        <ul class="kr-list">
+          <li class="kr-item"><span class="kr-num">KR1</span> Ler e anotar ≥ 4 diálogos de Platão ao longo do ano</li>
+          <li class="kr-item"><span class="kr-num">KR2</span> Manter diário filosófico com ≥ 3 entradas/semana</li>
+          <li class="kr-item"><span class="kr-num">KR3</span> Documentar ≥ 3 decisões concretas influenciadas pelo estudo platônico</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="okr-item" onclick="toggleOkr(this)">
+      <div class="okr-header">
+        <div class="okr-domain-badge" style="background:#80b080"></div>
+        <div class="okr-objective">O4 — Tornar a prática contemplativa inegociável</div>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="okr-body">
+        <ul class="kr-list">
+          <li class="kr-item"><span class="kr-num">KR1</span> Meditação matinal praticada em ≥ 85% dos dias do ano</li>
+          <li class="kr-item"><span class="kr-num">KR2</span> Exame de consciência noturno em ≥ 80% das noites</li>
+          <li class="kr-item"><span class="kr-num">KR3</span> Rotina noturna completa em ≥ 70% das noites</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="okr-item" onclick="toggleOkr(this)">
+      <div class="okr-header">
+        <div class="okr-domain-badge" style="background:#c0a070"></div>
+        <div class="okr-objective">O5 — Construir o alicerce financeiro da autonomia</div>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="okr-body">
+        <ul class="kr-list">
+          <li class="kr-item"><span class="kr-num">KR1</span> R$ 50k aportados em investimentos até 31/12/2026</li>
+          <li class="kr-item"><span class="kr-num">KR2</span> Revisão financeira mensal em ≥ 10 dos 12 meses</li>
+          <li class="kr-item"><span class="kr-num">KR3</span> Plano de quitação da casa atualizado e validado até Q2</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CAMADA 3 — THREAT MODELING -->
+<section id="threats">
+  <div class="section-header">
+    <span class="section-tag tag-c3">Camada 3</span>
+    <h2 class="section-title">Threat Modeling</h2>
+  </div>
+  <p class="section-subtitle">STRIDE adaptado para vida pessoal — clique para expandir cada ameaça</p>
+
+  <div class="threat-list">
+
+    <div class="threat-item" onclick="toggleThreat(this)">
+      <div class="threat-header">
+        <span class="threat-id">T2</span>
+        <span class="threat-name">Burnout Silencioso</span>
+        <span class="risk-badge risk-critical">Crítico #1</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="threat-body">
+        <div class="threat-detail-grid">
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Descrição</div>
+            <div class="threat-detail-value">Acúmulo progressivo de demandas sem recuperação adequada. Este se instala devagar, mascarado de produtividade.</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Assets-alvo</div>
+            <div class="threat-detail-value">Energia Vital, Serenidade Interior, Núcleo Familiar</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Vetor de ataque</div>
+            <div class="threat-detail-value">Semanas "excepcionais" que viram padrão; sono sacrificado; ausência de tempo sem agenda.</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Indicador de comprometimento</div>
+            <div class="threat-detail-value">Irritabilidade crescente; queda de motivação sem causa óbvia; treino abandonado por "falta de energia".</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="threat-item" onclick="toggleThreat(this)">
+      <div class="threat-header">
+        <span class="threat-id">T3</span>
+        <span class="threat-name">Negligência Familiar por Ambição</span>
+        <span class="risk-badge risk-critical">Crítico #2</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="threat-body">
+        <div class="threat-detail-grid">
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Descrição</div>
+            <div class="threat-detail-value">Trabalho e estudo consumindo o tempo e a presença que deveriam ir para a esposa e filhos. O problema não é a ausência física — é a ausência real.</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Assets-alvo</div>
+            <div class="threat-detail-value">Núcleo Familiar</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Vetor de ataque</div>
+            <div class="threat-detail-value">"Só mais uma hora de estudo"; reuniões que se estendem; presença física enquanto a mente está em outro lugar.</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Indicador de comprometimento</div>
+            <div class="threat-detail-value">Diminuição dos rituais familiares; filhos parando de buscar presença; esposa reportando ausência emocional.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="threat-item" onclick="toggleThreat(this)">
+      <div class="threat-header">
+        <span class="threat-id">T8</span>
+        <span class="threat-name">Degradação Espiritual Silenciosa</span>
+        <span class="risk-badge risk-critical">Crítico #3</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="threat-body">
+        <div class="threat-detail-grid">
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Descrição</div>
+            <div class="threat-detail-value">A erosão gradual da prática contemplativa — o primeiro sistema a ser sacrificado e o último a ser percebido quando degradado.</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Assets-alvo</div>
+            <div class="threat-detail-value">Serenidade Interior, Clareza Mental</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Vetor de ataque</div>
+            <div class="threat-detail-value">"Hoje não tenho tempo para meditar"; substituição da contemplação por consumo de conteúdo.</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Indicador de comprometimento</div>
+            <div class="threat-detail-value">Reatividade emocional aumentando; decisões impulsivas; sensação de "estar perdido" sem saber por quê.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="threat-item" onclick="toggleThreat(this)">
+      <div class="threat-header">
+        <span class="threat-id">T1</span>
+        <span class="threat-name">Dispersão de Foco</span>
+        <span class="risk-badge risk-high">Alto #4</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="threat-body">
+        <div class="threat-detail-grid">
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Descrição</div>
+            <div class="threat-detail-value">Iniciar múltiplos estudos e projetos simultaneamente, diluindo a energia e nunca atingindo profundidade suficiente para competência rara.</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Assets-alvo</div>
+            <div class="threat-detail-value">Competência Técnica, Clareza Mental</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Vetor de ataque</div>
+            <div class="threat-detail-value">Novos cursos, tecnologias ou áreas que parecem urgentes. O ciclo da novidade.</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Indicador de comprometimento</div>
+            <div class="threat-detail-value">Mais de 2 áreas de estudo ativas ao mesmo tempo; abandono de projetos antes de concluí-los.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="threat-item" onclick="toggleThreat(this)">
+      <div class="threat-header">
+        <span class="threat-id">T4</span>
+        <span class="threat-name">Conforto e Mediocridade</span>
+        <span class="risk-badge risk-high">Alto #5</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="threat-body">
+        <div class="threat-detail-grid">
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Descrição</div>
+            <div class="threat-detail-value">A atração pelo conforto que corrói a disciplina progressivamente. Não é uma decisão — é uma série de pequenas concessões que redefinem o padrão de vida para baixo.</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Vetor de ataque</div>
+            <div class="threat-detail-value">"Hoje não"; prazer imediato substituindo esforço; comparação descendente ("estou bem comparado a X").</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Indicador</div>
+            <div class="threat-detail-value">Treinos faltando regularmente; estudo com menos horas; excesso de entretenimento passivo.</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Probabilidade / Impacto</div>
+            <div class="threat-detail-value">Alta / Alto</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="threat-item" onclick="toggleThreat(this)">
+      <div class="threat-header">
+        <span class="threat-id">T6</span>
+        <span class="threat-name">Desvio de Valores por Pressão Social</span>
+        <span class="risk-badge risk-high">Alto #6</span>
+        <span class="chevron">▶</span>
+      </div>
+      <div class="threat-body">
+        <div class="threat-detail-grid">
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Descrição</div>
+            <div class="threat-detail-value">Adaptar comportamento, escolhas ou posicionamento aos valores de outros — família, pares, cultura profissional — em detrimento dos próprios.</div>
+          </div>
+          <div class="threat-detail-box">
+            <div class="threat-detail-label">Indicador de comprometimento</div>
+            <div class="threat-detail-value">Sentimento de inautenticidade; ações que envergonhariam o eu do necrológico.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CAMADA 4 — CONTROLS -->
+<section id="controls">
+  <div class="section-header">
+    <span class="section-tag tag-c4">Camada 4</span>
+    <h2 class="section-title">Security Controls</h2>
+  </div>
+
+  <div class="controls-tabs">
+    <button class="ctrl-tab active" onclick="switchTab(this, 'tab-preventive')">Preventivos</button>
+    <button class="ctrl-tab" onclick="switchTab(this, 'tab-detective')">Detectivos</button>
+    <button class="ctrl-tab" onclick="switchTab(this, 'tab-corrective')">Corretivos</button>
+    <button class="ctrl-tab" onclick="switchTab(this, 'tab-runbook')">Runbook de Decisões</button>
+  </div>
+
+  <!-- PREVENTIVOS -->
+  <div class="ctrl-panel active" id="tab-preventive">
+    <div class="control-list">
+
+      <div class="control-item" onclick="toggleControl(this)">
+        <div class="control-header">
+          <span class="control-id">CP-01</span>
+          <span class="control-name">Rotina Matinal Inviolável</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="control-body">
+          <div class="control-target">Mitiga: <span>T2 Burnout</span><span>T4 Conforto</span><span>T8 Degradação Espiritual</span></div>
+          <div class="control-protocol">Os primeiros 90-120 minutos do dia pertencem ao sistema, não à agenda. São protegidos antes que qualquer demanda externa possa invadi-los.<br><br><strong>Protocolo:</strong> Meditação (15-20 min) → Leitura filosófica ou sagrada (20-30 min) → Movimento e exercício.</div>
+          <div class="control-rule">⚡ Se o dia começar sem a rotina matinal, o risco de T4 e T8 está ativo. Não negociar.</div>
+        </div>
+      </div>
+
+      <div class="control-item" onclick="toggleControl(this)">
+        <div class="control-header">
+          <span class="control-id">CP-02</span>
+          <span class="control-name">Bloco de Deep Work Técnico</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="control-body">
+          <div class="control-target">Mitiga: <span>T1 Dispersão</span><span>T4 Conforto</span><span>T7 Autoenganação</span></div>
+          <div class="control-protocol">Horário fixo para estudo técnico (Web Pentest + Python) bloqueado antes das demandas do dia. Foco único — apenas uma área de domínio ativa por vez.<br><br><strong>Protocolo:</strong> Mínimo 90 minutos/dia. Uma trilha por vez. Projeto real a cada 30 dias de estudo.</div>
+          <div class="control-rule">⚡ Nenhum novo curso pode ser iniciado enquanto o atual tiver menos de 70% concluído.</div>
+        </div>
+      </div>
+
+      <div class="control-item" onclick="toggleControl(this)">
+        <div class="control-header">
+          <span class="control-id">CP-03</span>
+          <span class="control-name">Ritmo Familiar Fixo</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="control-body">
+          <div class="control-target">Mitiga: <span>T3 Negligência Familiar</span></div>
+          <div class="control-protocol">Rituais familiares imunes à agenda — eventos recorrentes que não podem ser cancelados por "estou ocupado".<br><br><strong>Protocolo:</strong> Jantar em família ≥ 5 noites/semana · Tempo individual com cada filho 1x/semana · Tempo com a esposa 1x/semana · Domingo protegido.</div>
+          <div class="control-rule">⚡ Estes rituais têm prioridade sobre qualquer demanda profissional não-emergencial.</div>
+        </div>
+      </div>
+
+      <div class="control-item" onclick="toggleControl(this)">
+        <div class="control-header">
+          <span class="control-id">CP-04</span>
+          <span class="control-name">Filtro de Essencialismo nas Decisões</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="control-body">
+          <div class="control-target">Mitiga: <span>T1 Dispersão</span><span>T6 Desvio de Valores</span></div>
+          <div class="control-protocol">Toda nova oportunidade passa por um filtro antes de ser aceita:<br><br>1. Isso está alinhado com meus valores?<br>2. Isso avança meus OKRs deste ano?<br>3. Se eu disser sim para isso, o que precisarei dizer não?<br>4. Eu aceitaria isso se fosse amanhã de manhã?</div>
+          <div class="control-rule">⚡ Se as perguntas 1 e 2 não forem claramente sim, a resposta é não.</div>
+        </div>
+      </div>
+
+      <div class="control-item" onclick="toggleControl(this)">
+        <div class="control-header">
+          <span class="control-id">CP-06</span>
+          <span class="control-name">Exame de Consciência Noturno</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="control-body">
+          <div class="control-target">Mitiga: <span>T6 Desvio de Valores</span><span>T7 Autoenganação</span><span>T8 Degradação Espiritual</span></div>
+          <div class="control-protocol">Revisão diária de alinhamento — o que fiz hoje reflete quem quero ser?<br><br><strong>3 perguntas antes de dormir:</strong><br>1. Em que momento de hoje fui fiel aos meus valores?<br>2. Em que momento de hoje me afastei deles?<br>3. O que farei diferente amanhã?</div>
+          <div class="control-rule">⚡ Este não é um exercício de autopunição — é calibração. O perdão vem depois do reconhecimento honesto.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DETECTIVOS -->
+  <div class="ctrl-panel" id="tab-detective">
+    <div class="control-list">
+
+      <div class="control-item" onclick="toggleControl(this)">
+        <div class="control-header">
+          <span class="control-id">CD-01</span>
+          <span class="control-name">Weekly Review</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="control-body">
+          <div class="control-target">Frequência: <span>Semanal · 30-45 min</span></div>
+          <div class="control-protocol">Monitorar semanalmente: treinos realizados, qualidade do sono, horas de Deep Work, avanço no Pentest, estudo de Platão, rituais familiares realizados, meditações, exame de consciência, estado de serenidade (1-5), gastos não planejados.</div>
+          <div class="control-rule">⚡ Se 3 ou mais itens em vermelho, alguma ameaça está ativa. Registrar no current-state.</div>
+        </div>
+      </div>
+
+      <div class="control-item" onclick="toggleControl(this)">
+        <div class="control-header">
+          <span class="control-id">CD-02</span>
+          <span class="control-name">Monthly Check-in</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="control-body">
+          <div class="control-target">Frequência: <span>Mensal · 60-90 min</span></div>
+          <div class="control-protocol">Scoring de 0-1,0 para cada KR do mês. Revisão financeira (ritmo de aportes). Revisão de papéis (qual está sendo negligenciado). Revisão de ameaças ativas.<br><br><strong>Output obrigatório:</strong> Uma frase descrevendo o "estado do sistema" e a principal prioridade para o próximo mês.</div>
+        </div>
+      </div>
+
+      <div class="control-item" onclick="toggleControl(this)">
+        <div class="control-header">
+          <span class="control-id">CD-03</span>
+          <span class="control-name">Quarterly Retro</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="control-body">
+          <div class="control-target">Frequência: <span>Trimestral · 2-3h · Mar / Jun / Set / Dez</span></div>
+          <div class="control-protocol">Scoring dos OKRs do trimestre. Atualização do current-state. Revisão das ameaças: alguma se materializou? Qual controle falhou? O que aconteceu fora do plano? Qual o foco único do próximo trimestre?</div>
+          <div class="control-rule">⚡ Template disponível em retro-template.md</div>
+        </div>
+      </div>
+
+      <div class="control-item" onclick="toggleControl(this)">
+        <div class="control-header">
+          <span class="control-id">CD-04</span>
+          <span class="control-name">Sinais de Alerta — Ação Imediata</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="control-body">
+          <div class="control-protocol" style="font-size:0.82rem">
+            Estes sinais acionam revisão imediata — não esperar a weekly:<br><br>
+            <strong>3+ treinos perdidos na mesma semana</strong> → Revisão de agenda e energia<br>
+            <strong>Irritabilidade persistente por 3+ dias</strong> → Revisão da contemplação e sono<br>
+            <strong>Sensação de "estar perdido"</strong> → Ler necrológico e pilares<br>
+            <strong>2+ tecnologias em estudo simultâneo</strong> → Parar uma imediatamente<br>
+            <strong>Jantar em família perdido 3+ vezes na semana</strong> → Revisão dos compromissos noturnos<br>
+            <strong>Aportes suspensos por 2+ meses</strong> → Revisão financeira de emergência
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CORRETIVOS -->
+  <div class="ctrl-panel" id="tab-corrective">
+    <div class="control-list">
+
+      <div class="control-item" onclick="toggleControl(this)">
+        <div class="control-header">
+          <span class="control-id">CR-01</span>
+          <span class="control-name">Protocolo de Recuperação de Burnout</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="control-body">
+          <div class="control-target">Aciona quando: <span>energia crônica baixa por 2+ semanas</span><span>motivação próxima de zero</span></div>
+          <div class="control-protocol">
+            <strong>Fase 1 — Reconhecer (Dia 1-2):</strong> Nomear honestamente. Não resolver com mais esforço. Comunicar à esposa.<br><br>
+            <strong>Fase 2 — Estabilizar (Semana 1-2):</strong> Suspender estudo intenso. Reduzir agenda ao essencial. Priorizar sono (8h). Manter apenas meditação e exercício leve.<br><br>
+            <strong>Fase 3 — Retomar (Semana 3-6):</strong> Reintroduzir um hábito por semana. Treino antes do estudo. Revisar o que gerou o burnout.
+          </div>
+        </div>
+      </div>
+
+      <div class="control-item" onclick="toggleControl(this)">
+        <div class="control-header">
+          <span class="control-id">CR-02</span>
+          <span class="control-name">Protocolo de Recuperação de Crise Familiar</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="control-body">
+          <div class="control-target">Aciona quando: <span>tensão persistente no lar</span><span>afastamento emocional</span></div>
+          <div class="control-protocol">
+            <strong>Fase 1:</strong> "Estive ausente. Isso importa mais do que qualquer projeto." Sem transferir culpa.<br><br>
+            <strong>Fase 2:</strong> Conversa direta e vulnerável. Suspensão de atividades noturnas não essenciais por 2 semanas. Restaurar rituais familiares.<br><br>
+            <strong>Fase 3:</strong> Revisar rituais. Agenda conjunta com a esposa. Se tensão persiste após 4 semanas, considerar apoio externo.
+          </div>
+        </div>
+      </div>
+
+      <div class="control-item" onclick="toggleControl(this)">
+        <div class="control-header">
+          <span class="control-id">CR-05</span>
+          <span class="control-name">Protocolo de Realinhamento de Valores</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="control-body">
+          <div class="control-target">Aciona quando: <span>ações sistematicamente contrárias aos valores</span><span>sensação de vida errada</span></div>
+          <div class="control-protocol">
+            <strong>Fase 1:</strong> Ler o necrológico inteiro em silêncio. Ler os pilares e values. Escrever no diário: "O que estou fazendo que contradiz isso?"<br><br>
+            <strong>Fase 2:</strong> Identificar a maior contradição. Fazer uma única mudança concreta e imediata — não uma lista.<br><br>
+            <strong>Fase 3:</strong> Exame de consciência diário por 30 dias. Buscar feedback honesto. Revisão mensal de alinhamento.
+          </div>
+          <div class="control-rule">⚡ A recuperação começa no momento em que o problema é reconhecido — não "quando as coisas melhorarem".</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RUNBOOK -->
+  <div class="ctrl-panel" id="tab-runbook">
+    <div class="runbook-list">
+
+      <div class="runbook-item" onclick="toggleRunbook(this)">
+        <div class="runbook-header">
+          <span class="runbook-id">DR-01</span>
+          <span class="runbook-name">Aceitar uma Oferta de Emprego ou Projeto</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="runbook-body">
+          Filtro obrigatório — responder honestamente:
+          <ul class="filter-steps">
+            <li><span class="step-num">01</span> Isso me aproxima ou afasta da especialização técnica como foco único?</li>
+            <li><span class="step-num">02</span> Isso respeita ou invade o tempo da família?</li>
+            <li><span class="step-num">03</span> Isso está alinhado com o modelo autônomo e sereno de 2030?</li>
+            <li><span class="step-num">04</span> A remuneração permite manter o ritmo de 50k em aportes anuais?</li>
+            <li><span class="step-num">05</span> Eu me envergonharia de aceitar isso diante do homem do meu necrológico?</li>
+          </ul>
+          <div class="control-rule" style="margin-top:1rem">⚡ Se 3 ou mais respostas forem negativas, não aceitar. Dúvida nas perguntas 2 ou 5 = não.</div>
+        </div>
+      </div>
+
+      <div class="runbook-item" onclick="toggleRunbook(this)">
+        <div class="runbook-header">
+          <span class="runbook-id">DR-02</span>
+          <span class="runbook-name">Dizer Não a Demandas de Tempo</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="runbook-body">
+          <ul class="filter-steps">
+            <li><span class="step-num">01</span> Isso é um dever (família, saúde, obrigação ética) ou uma preferência de outro?</li>
+            <li><span class="step-num">02</span> Se eu aceitar, o que perco nos próximos 7 dias? (treino? estudo? família?)</li>
+            <li><span class="step-num">03</span> Eu aceitaria isso se fosse amanhã de manhã, no pico da minha energia?</li>
+          </ul>
+          <div class="control-rule" style="margin-top:1rem">⚡ Frase padrão de recusa: "Obrigado pelo convite, mas não consigo assumir isso agora." Sem explicações longas.</div>
+        </div>
+      </div>
+
+      <div class="runbook-item" onclick="toggleRunbook(this)">
+        <div class="runbook-header">
+          <span class="runbook-id">DR-03</span>
+          <span class="runbook-name">Hierarquia de Prioridades em Conflito</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="runbook-body">
+          Quando o trabalho, o estudo, a família e o cuidado pessoal entram em conflito:
+          <ul class="filter-steps">
+            <li><span class="step-num">1º</span> Saúde emergencial (doença real, exame médico)</li>
+            <li><span class="step-num">2º</span> Família (crise familiar, compromisso com filhos, cônjuge)</li>
+            <li><span class="step-num">3º</span> Contemplação matinal (mínimo 15 min de meditação — inegociável)</li>
+            <li><span class="step-num">4º</span> Trabalho com prazo real e consequências concretas</li>
+            <li><span class="step-num">5º</span> Estudo técnico (Deep Work)</li>
+            <li><span class="step-num">6º</span> Estudo filosófico</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="runbook-item" onclick="toggleRunbook(this)">
+        <div class="runbook-header">
+          <span class="runbook-id">DR-04</span>
+          <span class="runbook-name">Investir ou Gastar em Bens de Consumo</span>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="runbook-body">
+          Para qualquer compra acima de R$500 não planejada:
+          <ul class="filter-steps">
+            <li><span class="step-num">01</span> Isso aumenta minha capacidade de produzir valor, minha saúde ou minha contemplação?</li>
+            <li><span class="step-num">02</span> Isso está alinhado com o essencialismo — ou é complexidade adicionada?</li>
+            <li><span class="step-num">03</span> Se eu comprar isso, manterei o aporte mensal previsto?</li>
+            <li><span class="step-num">04</span> Vou querer isso daqui a 6 meses?</li>
+          </ul>
+          <div class="control-rule" style="margin-top:1rem">⚡ Se (3) for não, a compra não acontece. Se (4) for incerto, esperar 72h antes de decidir.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CAMADA 5 — PROJECTS -->
+<section id="projects">
+  <div class="section-header">
+    <span class="section-tag tag-c5">Camada 5</span>
+    <h2 class="section-title">Structural Projects</h2>
+  </div>
+
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div class="project-card-header">
+        <div class="project-card-tag">Project Charter · Segurança</div>
+        <div class="project-card-title">Especialização em Web Penetration Testing</div>
+        <div class="project-card-problem">Posicionamento atual na competição de commodities técnicas — sem especialização de alto valor que permita autonomia, autoridade e renda crescente.</div>
+      </div>
+      <div class="project-card-body">
+        <ul class="project-phases">
+          <li class="phase-item">
+            <span class="phase-label">Q1-Q2 2026</span>
+            <span class="phase-text">Trilha estruturada + ambiente de laboratório + 1 assessment em lab. controlado</span>
+          </li>
+          <li class="phase-item">
+            <span class="phase-label">Q3 2026</span>
+            <span class="phase-text">2 assessments reais documentados + 3 scripts Python + portfólio público iniciado</span>
+          </li>
+          <li class="phase-item">
+            <span class="phase-label">Q4 2026-2027</span>
+            <span class="phase-text">Certificação avançada (OSCP ou equivalente) + 5+ assessments + base para ML</span>
+          </li>
+          <li class="phase-item">
+            <span class="phase-label">2030</span>
+            <span class="phase-text">Especialista reconhecido · cursos online como renda passiva · modelo autônomo</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-card-header">
+        <div class="project-card-tag">Project Charter · Finanças</div>
+        <div class="project-card-title">Autonomia Financeira e Casa Própria</div>
+        <div class="project-card-problem">Dependência total de renda ativa para as decisões de vida — casa, trabalho, tempo. Sem autonomia financeira, o modelo de trabalho sereno de 2030 é impossível.</div>
+      </div>
+      <div class="project-card-body">
+        <ul class="project-phases">
+          <li class="phase-item">
+            <span class="phase-label">2026</span>
+            <span class="phase-text">R$50k aportados · revisão financeira mensal · plano de casa validado · reserva de emergência</span>
+          </li>
+          <li class="phase-item">
+            <span class="phase-label">2027-2028</span>
+            <span class="phase-text">Renda técnica crescente · primeiro curso online estruturado · aportes ≥ R$60k/ano</span>
+          </li>
+          <li class="phase-item">
+            <span class="phase-label">2029-2030</span>
+            <span class="phase-text">Casa própria adquirida · renda passiva ≥ 30% da renda total · modelo autônomo</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <!-- ROADMAP -->
+  <p class="section-subtitle">Personal Roadmap 2026–2030</p>
+  <div class="roadmap-timeline">
+
+    <div class="timeline-year">
+      <div class="year-dot"></div>
+      <div class="year-label">2026 — Essencialismo Estratégico</div>
+      <div class="year-theme">Consolidar a base biológica, técnica e contemplativa</div>
+      <div class="year-milestones">
+        <span class="milestone-chip">Rotina matinal consolidada</span>
+        <span class="milestone-chip">Treino de força 5x/semana</span>
+        <span class="milestone-chip">Platão — 4 diálogos anotados</span>
+        <span class="milestone-chip">2+ assessments reais</span>
+        <span class="milestone-chip">R$50k aportados</span>
+        <span class="milestone-chip">Crioterapia 3x/semana</span>
+        <span class="milestone-chip">Portfólio público iniciado</span>
+      </div>
+    </div>
+
+    <div class="timeline-year">
+      <div class="year-dot"></div>
+      <div class="year-label">2027 — Profundidade</div>
+      <div class="year-theme">Sair do nível de estudante para o nível de profissional reconhecido</div>
+      <div class="year-milestones">
+        <span class="milestone-chip">Certificação avançada obtida</span>
+        <span class="milestone-chip">5+ assessments documentados</span>
+        <span class="milestone-chip">Início da trilha de ML</span>
+        <span class="milestone-chip">Primeiros freelances</span>
+        <span class="milestone-chip">R$60k+ em aportes</span>
+      </div>
+    </div>
+
+    <div class="timeline-year">
+      <div class="year-dot"></div>
+      <div class="year-label">2028 — Transição</div>
+      <div class="year-theme">Construir a ponte entre o modelo atual e o modelo autônomo</div>
+      <div class="year-milestones">
+        <span class="milestone-chip">Primeiro curso online em gravação</span>
+        <span class="milestone-chip">Renda autônoma ≥ 15%</span>
+        <span class="milestone-chip">Primeiro projeto ML real</span>
+        <span class="milestone-chip">6 meses de reserva</span>
+      </div>
+    </div>
+
+    <div class="timeline-year">
+      <div class="year-dot"></div>
+      <div class="year-label">2029 — Consolidação</div>
+      <div class="year-theme">Preparar a infraestrutura da vida de 2030</div>
+      <div class="year-milestones">
+        <span class="milestone-chip">Cursos com renda passiva crescente</span>
+        <span class="milestone-chip">Processo de aquisição da casa</span>
+        <span class="milestone-chip">Renda autônoma ≥ 30%</span>
+        <span class="milestone-chip">Sul do Brasil confirmado</span>
+      </div>
+    </div>
+
+    <div class="timeline-year">
+      <div class="year-dot" style="background:var(--gold-light); box-shadow:0 0 12px rgba(232,201,122,0.5)"></div>
+      <div class="year-label">2030 — Chegada</div>
+      <div class="year-theme">A vida descrita. Sereno, inteiro e grato.</div>
+      <div class="year-milestones">
+        <span class="milestone-chip" style="border-color:var(--gold-dim); color:var(--gold-light)">Casa própria no Sul do Brasil</span>
+        <span class="milestone-chip" style="border-color:var(--gold-dim); color:var(--gold-light)">Especialista reconhecido</span>
+        <span class="milestone-chip" style="border-color:var(--gold-dim); color:var(--gold-light)">Cursos online ativos</span>
+        <span class="milestone-chip" style="border-color:var(--gold-dim); color:var(--gold-light)">Victor Hugo 10 · Isadora 6</span>
+        <span class="milestone-chip" style="border-color:var(--gold-dim); color:var(--gold-light)">Rotina contemplativa madura</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- NECROLÓGIO -->
+<div id="necrologio">
+  <div class="necrologio-inner">
+    <div class="necrologio-title">🕊️ Necrológico · O Legado</div>
+    <div class="necrologio-text">
+      <p>Hoje partiu um homem que fez da serenidade sua fortaleza e da busca pela Verdade, pelo Bem e pelo Belo, a direção de toda a sua vida.</p>
+      <p>Em cada alegria, manteve o coração firme e agradecido, sem se perder em euforias vazias. Em cada tristeza, sustentou a dignidade silenciosa dos que sabem que tudo é passageiro sob o olhar eterno.</p>
+      <p>Seu caminho foi de austeridade alegre: cultivou um corpo saudável com disciplina tranquila, alimentou-se com respeito pela vida, cuidou da mente como quem afina um instrumento, dedicou-se ao exercício do espírito através da meditação, da contemplação da música, da leitura profunda e da construção de vínculos autênticos.</p>
+      <p>Amou a simplicidade como quem descobre nela a verdadeira grandeza. Fez da sua casa um abrigo de beleza serena: a lareira acesa, a música elevada preenchendo o ar, as conversas e os silêncios partilhados com sua esposa e seus filhos — Victor Hugo e Isadora — foram seus maiores tesouros.</p>
+      <p>Profissionalmente, usou seu talento e seu conhecimento para servir ao bem comum, sempre com ética inegociável e espírito elevado. Criou com as próprias mãos uma forma de trabalho que respeitava sua alma, ensinando outros com cursos que transmitiam mais que técnica — transmitiam valores.</p>
+      <p>Nunca procurou glórias fugazes, mas sim a felicidade de quem caminha fiel a si mesmo. E ao partir, deixou atrás de si não apenas lembranças, mas exemplos vivos: da serenidade que não se compra, da retidão que não se negocia, da beleza que se cultiva de dentro para fora.</p>
+    </div>
+    <div class="necrologio-final">
+      "Hoje, como sempre, escolho a Verdade, o Bem e o Belo."
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-quote">Viveu como rezava.</p>
+  <p class="footer-meta">Life OS · v1.0 · 2026-03-28 · Plano de Vida</p>
+</footer>
+
+<script>
+  // ── TOGGLE FUNCTIONS ──
+  function togglePillar(el) {
+    el.classList.toggle('expanded');
+  }
+
+  function toggleRole(el) {
+    const detail = el.nextElementSibling;
+    const isOpen = el.classList.contains('open');
+    el.classList.toggle('open');
+    detail.style.display = isOpen ? 'none' : 'block';
+  }
+
+  function toggleOkr(el) {
+    el.classList.toggle('open');
+  }
+
+  function toggleThreat(el) {
+    el.classList.toggle('open');
+  }
+
+  function toggleControl(el) {
+    el.classList.toggle('open');
+  }
+
+  function toggleRunbook(el) {
+    el.classList.toggle('open');
+  }
+
+  // ── TABS ──
+  function switchTab(btn, panelId) {
+    document.querySelectorAll('.ctrl-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.ctrl-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(panelId).classList.add('active');
+  }
+
+  // ── NAV ACTIVE STATE ──
+  const sections = document.querySelectorAll('section, #necrologio');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => {
+          a.classList.remove('active');
+          if (a.getAttribute('href') === '#' + entry.target.id) {
+            a.classList.add('active');
+          }
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => observer.observe(s));
+
+  // ── SMOOTH SCROLL OFFSET FOR NAV ──
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        window.scrollTo({
+          top: target.offsetTop - 64,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+</script>
+</body>
+</html>
