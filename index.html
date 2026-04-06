@@ -739,6 +739,45 @@ section {
 
 .fase-texto { color: var(--ink-soft); line-height: 1.7; font-weight: 300; }
 
+/* ─── FASE CATEGORIAS ─── */
+.fase-categorias {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.fase-cat {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: 0.5rem;
+  align-items: start;
+  font-size: 0.83rem;
+}
+
+.fase-cat-label {
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding-top: 0.18rem;
+  font-weight: 400;
+}
+
+.fase-cat-itens {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+.fase-cat-autor {
+  font-style: italic;
+  color: var(--ink-dim);
+  font-size: 0.92em;
+}
+
 /* ─── ROTINA ─── */
 .ritual {
   display: flex;
@@ -1498,22 +1537,103 @@ footer {
     </div>
     <div class="projeto-body">
       <div class="fases">
+
         <div class="fase">
           <span class="fase-ano">2026</span>
-          <span class="fase-texto">Linux Command Line · Container Security · Zero Trust Networks · Staff Engineer's Path · 1º artigo publicado</span>
+          <div class="fase-categorias">
+            <div class="fase-cat">
+              <span class="fase-cat-label">Leituras</span>
+              <div class="fase-cat-itens">
+                <span>The Linux Command Line <span class="fase-cat-autor">— William Shotts</span></span>
+                <span>Container Security <span class="fase-cat-autor">— Liz Rice</span></span>
+                <span>Zero Trust Networks <span class="fase-cat-autor">— Gilman &amp; Barth</span></span>
+                <span>The Staff Engineer's Path <span class="fase-cat-autor">— Tanya Reilly</span></span>
+              </div>
+            </div>
+            <div class="fase-cat">
+              <span class="fase-cat-label">Publicação</span>
+              <div class="fase-cat-itens">
+                <span>1º artigo técnico de perspectiva própria</span>
+              </div>
+            </div>
+          </div>
         </div>
+
         <div class="fase">
           <span class="fase-ano">2027</span>
-          <span class="fase-texto">Kubernetes Security · Cloud Security · CCSP ou SABSA · 3 artigos publicados</span>
+          <div class="fase-categorias">
+            <div class="fase-cat">
+              <span class="fase-cat-label">Leituras</span>
+              <div class="fase-cat-itens">
+                <span>Hacking Kubernetes <span class="fase-cat-autor">— Rice &amp; Hausenblas</span></span>
+                <span>Cloud Security <span class="fase-cat-autor">— a definir conforme trilha</span></span>
+              </div>
+            </div>
+            <div class="fase-cat">
+              <span class="fase-cat-label">Certificação</span>
+              <div class="fase-cat-itens">
+                <span>CCSP <span class="fase-cat-autor">— ISC²</span></span>
+                <span>ou SABSA Foundation</span>
+              </div>
+            </div>
+            <div class="fase-cat">
+              <span class="fase-cat-label">Publicação</span>
+              <div class="fase-cat-itens">
+                <span>≥ 3 artigos publicados (acumulado)</span>
+              </div>
+            </div>
+          </div>
         </div>
+
         <div class="fase">
           <span class="fase-ano">2028</span>
-          <span class="fase-texto">Security Engineering (Anderson) · perspectiva IA+Segurança publicada · primeiro advisory externo · renda autônoma ≥ 10%</span>
+          <div class="fase-categorias">
+            <div class="fase-cat">
+              <span class="fase-cat-label">Leitura</span>
+              <div class="fase-cat-itens">
+                <span>Security Engineering <span class="fase-cat-autor">— Ross Anderson</span></span>
+              </div>
+            </div>
+            <div class="fase-cat">
+              <span class="fase-cat-label">Publicação</span>
+              <div class="fase-cat-itens">
+                <span>Perspectiva IA + Segurança publicada</span>
+              </div>
+            </div>
+            <div class="fase-cat">
+              <span class="fase-cat-label">Marcos</span>
+              <div class="fase-cat-itens">
+                <span>Primeiro advisory externo</span>
+                <span>Renda autônoma ≥ 10% da renda total</span>
+              </div>
+            </div>
+          </div>
         </div>
+
         <div class="fase">
           <span class="fase-ano">2030</span>
-          <span class="fase-texto">Arquiteto Sênior reconhecido · escrita técnica e advisory gerando renda complementar · modelo autônomo consolidado</span>
+          <div class="fase-categorias">
+            <div class="fase-cat">
+              <span class="fase-cat-label">Posição</span>
+              <div class="fase-cat-itens">
+                <span>Arquiteto Sênior reconhecido publicamente</span>
+              </div>
+            </div>
+            <div class="fase-cat">
+              <span class="fase-cat-label">Renda</span>
+              <div class="fase-cat-itens">
+                <span>Escrita técnica e advisory gerando renda complementar consistente</span>
+              </div>
+            </div>
+            <div class="fase-cat">
+              <span class="fase-cat-label">Modo</span>
+              <div class="fase-cat-itens">
+                <span>Modelo autônomo de trabalho consolidado</span>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   </div>
