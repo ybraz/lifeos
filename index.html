@@ -3,944 +3,498 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Life OS — Yuri Braz</title>
+<title>Yuri Braz · Life OS v6</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Geist+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:        #f5ede0;
-  --surface:   #ede3d4;
-  --surface2:  #e6dace;
-  --ink:       #1c1611;
-  --ink-soft:  #4a3f30;
-  --ink-dim:   #8a7a62;
-  --ink-faint: #c4b8a4;
-  --rule:      rgba(26,22,18,0.1);
-  --gold:      #7a5c28;
-  --gold-pale: rgba(122,92,40,0.07);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 17px;
-  line-height: 1.8;
-}
-
-/* Textura de papel */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.65;
-}
-
-/* ─── LOCK ─── */
-#lock {
-  position: fixed; inset: 0;
-  background: var(--bg);
-  z-index: 9999;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 2.5rem;
-}
-#lock.gone { display: none; }
-
-.lock-seal { width: 52px; height: 52px; }
-
-.lock-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.7rem;
-  font-weight: 300;
-  font-style: italic;
-  color: var(--ink);
-  letter-spacing: 0.06em;
-  margin-top: -1rem;
-}
-
-.lock-rule {
-  width: 48px; height: 1px;
-  background: var(--ink-faint);
-  margin: -1.2rem 0;
-}
-
-.lock-form { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; }
-
-.lock-input {
-  border: none;
-  border-bottom: 1px solid var(--ink-faint);
-  background: transparent;
-  color: var(--ink);
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.15rem;
-  font-weight: 300;
-  padding: 0.4rem 1rem;
-  text-align: center;
-  letter-spacing: 0.3em;
-  outline: none;
-  width: 190px;
-  transition: border-color 0.25s;
-}
-.lock-input:focus { border-color: var(--gold); }
-.lock-input.err { border-color: #a03030; }
-.lock-input::placeholder { color: var(--ink-faint); letter-spacing: 0.1em; font-size: 0.95rem; }
-
-.lock-btn {
-  background: none;
-  border: 1px solid var(--ink-faint);
-  color: var(--ink-soft);
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 0.82rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  padding: 0.45rem 2rem;
-  cursor: pointer;
-  transition: all 0.25s;
-}
-.lock-btn:hover { border-color: var(--gold); color: var(--gold); }
-
-/* ─── NAV ─── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  z-index: 100;
-  background: rgba(245,237,224,0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--rule);
-  padding: 0 3rem;
-  display: flex; align-items: center;
-  justify-content: space-between;
-  height: 50px;
-}
-
-.nav-brand {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1rem;
-  font-weight: 400;
-  font-style: italic;
-  color: var(--gold);
-  letter-spacing: 0.06em;
-  text-decoration: none;
-}
-
-.nav-links { display: flex; gap: 0; list-style: none; }
-.nav-links a {
-  color: var(--ink-dim);
-  text-decoration: none;
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 0.35rem 0.75rem;
-  transition: color 0.2s;
-}
-.nav-links a:hover, .nav-links a.active { color: var(--ink); }
-
-/* ─── HERO ─── */
-#hero {
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center;
-  padding: 7rem 2rem 5rem;
-  position: relative;
-  z-index: 1;
-}
-
-.hero-rule {
-  width: 1px; height: 70px;
-  background: linear-gradient(to bottom, transparent, var(--ink-faint));
-  margin: 0 auto 3.5rem;
-}
-
-.hero-eyebrow {
-  font-size: 0.66rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 2rem;
-}
-
-.hero-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(4rem, 10vw, 7.5rem);
-  font-weight: 300;
-  line-height: 1;
-  color: var(--ink);
-  margin-bottom: 2rem;
-}
-
-.hero-title em {
-  font-style: italic;
-  color: var(--ink-soft);
-}
-
-.hero-missao {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(1.05rem, 2vw, 1.3rem);
-  font-style: italic;
-  color: var(--ink-soft);
-  max-width: 560px;
-  line-height: 1.8;
-  margin-bottom: 3.5rem;
-  font-weight: 300;
-}
-
-.hero-telos {
-  display: flex;
-  gap: 3rem;
-  border-top: 1px solid var(--rule);
-  padding-top: 2rem;
-}
-
-.telos-item { text-align: center; }
-
-.telos-item-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.15rem;
-  font-weight: 400;
-  color: var(--gold);
-  display: block;
-  letter-spacing: 0.03em;
-}
-
-.telos-item-sub {
-  font-size: 0.63rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-}
-
-.hero-scroll-line {
-  position: absolute;
-  bottom: 2rem; left: 50%;
-  transform: translateX(-50%);
-  display: flex; flex-direction: column;
-  align-items: center; gap: 0.5rem;
-  color: var(--ink-faint);
-  font-size: 0.58rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  animation: float 2.8s ease-in-out infinite;
-}
-.hero-scroll-line div { width: 1px; height: 30px; background: linear-gradient(to bottom, var(--ink-faint), transparent); }
-
-@keyframes float {
-  0%,100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
-  50% { opacity: 0.75; transform: translateX(-50%) translateY(4px); }
-}
-
-/* ─── SEÇÕES ─── */
-section {
-  max-width: 820px;
-  margin: 0 auto;
-  padding: 6rem 2.5rem;
-  border-top: 1px solid var(--rule);
-  position: relative;
-  z-index: 1;
-}
-
-.s-eyebrow {
-  font-size: 0.62rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 0.6rem;
-}
-
-.s-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 2.4rem;
-  font-weight: 300;
-  color: var(--ink);
-  margin-bottom: 0.4rem;
-  line-height: 1.1;
-}
-
-.s-lead {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  color: var(--ink-dim);
-  margin-bottom: 3rem;
-  font-size: 1.05rem;
-  font-weight: 300;
-}
-
-/* ─── EIXO ─── */
-.eixo-quote {
-  border-left: 2px solid var(--ink-faint);
-  padding: 0.75rem 1.75rem;
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  color: var(--ink-soft);
-  font-size: 1.2rem;
-  line-height: 1.9;
-  font-weight: 300;
-  margin-bottom: 2.5rem;
-}
-
-.eixo-pergunta {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.55rem;
-  font-style: italic;
-  font-weight: 400;
-  color: var(--ink);
-  text-align: center;
-  padding: 1.75rem 1rem;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  margin: 0 0 2.5rem;
-}
-
-.eixo-texto {
-  color: var(--ink-soft);
-  font-size: 1rem;
-  line-height: 1.9;
-  font-weight: 300;
-  margin-bottom: 2.5rem;
-}
-
-.eixo-modos {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-  margin-bottom: 2rem;
-}
-
-.modo {
-  background: var(--bg);
-  padding: 1.5rem 1.75rem;
-}
-
-.modo-label {
-  font-size: 0.58rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 0.4rem;
-}
-
-.modo-nome {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.3rem;
-  font-weight: 400;
-  color: var(--ink);
-  margin-bottom: 0.5rem;
-}
-
-.modo-desc {
-  font-size: 0.88rem;
-  color: var(--ink-soft);
-  font-weight: 300;
-  line-height: 1.7;
-  margin-bottom: 0.75rem;
-}
-
-.modo-badge {
-  display: inline-block;
-  font-size: 0.58rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 0.2rem 0.65rem;
-  border: 1px solid var(--ink-faint);
-  color: var(--ink-dim);
-}
-
-.eixo-tensao {
-  text-align: center;
-  font-style: italic;
-  color: var(--ink-dim);
-  font-size: 0.95rem;
-  font-weight: 300;
-}
-
-/* ─── PILARES ─── */
-.pilares-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-}
-
-.pilar {
-  background: var(--bg);
-  padding: 1.4rem 1.6rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.pilar:hover { background: var(--gold-pale); }
-.pilar.open { background: var(--gold-pale); }
-
-.pilar-header {
-  display: flex; align-items: baseline;
-  gap: 0.75rem; margin-bottom: 0.3rem;
-}
-
-.pilar-num {
-  font-size: 0.62rem;
-  color: var(--gold);
-  letter-spacing: 0.08em;
-  width: 1.4rem;
-  flex-shrink: 0;
-  font-weight: 400;
-}
-
-.pilar-nome {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.15rem;
-  font-weight: 400;
-  color: var(--ink);
-}
-
-.pilar-excerpt {
-  font-size: 0.82rem;
-  color: var(--ink-dim);
-  padding-left: 2.15rem;
-  line-height: 1.6;
-  font-style: italic;
-}
-
-.pilar-corpo {
-  display: none;
-  font-size: 0.88rem;
-  color: var(--ink-soft);
-  padding-left: 2.15rem;
-  padding-top: 0.75rem;
-  margin-top: 0.75rem;
-  border-top: 1px solid var(--rule);
-  line-height: 1.8;
-  font-weight: 300;
-}
-
-.pilar.open .pilar-corpo { display: block; }
-.pilar.open .pilar-excerpt { display: none; }
-
-/* ─── PAPÉIS ─── */
-.papeis { display: flex; flex-direction: column; border: 1px solid var(--rule); }
-.papeis > * + * { border-top: 1px solid var(--rule); }
-
-.papel {
-  background: var(--bg);
-  padding: 1.1rem 1.6rem;
-  cursor: pointer;
-  transition: background 0.2s;
-  display: grid;
-  grid-template-columns: 1.6rem 1fr auto;
-  align-items: center;
-  gap: 1rem;
-}
-
-.papel:hover { background: var(--gold-pale); }
-.papel.open { background: var(--gold-pale); }
-
-.papel-icon { font-size: 1.05rem; }
-
-.papel-info-nome {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.05rem;
-  font-weight: 400;
-  color: var(--ink);
-}
-
-.papel-info-tag {
-  font-size: 0.68rem;
-  color: var(--ink-dim);
-  letter-spacing: 0.03em;
-  margin-top: 0.1rem;
-  font-style: italic;
-}
-
-.papel-chevron {
-  font-size: 0.55rem;
-  color: var(--ink-faint);
-  transition: transform 0.3s;
-}
-
-.papel.open .papel-chevron { transform: rotate(90deg); }
-
-.papel-detalhe {
-  display: none;
-  padding: 1rem 1.6rem 1.3rem;
-  background: var(--gold-pale);
-  border-top: 1px solid var(--rule);
-}
-
-.papel.open + .papel-detalhe { display: block; }
-
-.papel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; font-size: 0.85rem; }
-
-.papel-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 0.3rem;
-}
-
-.papel-texto { color: var(--ink-soft); line-height: 1.7; font-weight: 300; }
-
-/* ─── PROTOCOLO ATIVO ─── */
-.protocolo-ativo {
-  margin-top: 1.25rem;
-  padding: 0.85rem 1.1rem;
-  background: rgba(140, 40, 40, 0.05);
-  border: 1px solid rgba(140, 40, 40, 0.18);
-  font-size: 0.85rem;
-  color: var(--ink-soft);
-  line-height: 1.75;
-  font-weight: 300;
-}
-
-.protocolo-ativo-label {
-  font-size: 0.58rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #8a2020;
-  display: block;
-  margin-bottom: 0.4rem;
-  font-weight: 400;
-}
-
-/* ─── OKRs ─── */
-.okr-list { display: flex; flex-direction: column; border: 1px solid var(--rule); }
-.okr-list > * + * { border-top: 1px solid var(--rule); }
-
-.okr {
-  background: var(--bg);
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.okr-header {
-  padding: 1.1rem 1.6rem;
-  display: grid;
-  grid-template-columns: 0.5rem 1fr auto;
-  align-items: center;
-  gap: 1rem;
-}
-
-.okr:hover .okr-header { background: var(--gold-pale); }
-.okr.open .okr-header { background: var(--gold-pale); }
-
-.okr-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-
-.okr-obj {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1rem;
-  font-weight: 400;
-  color: var(--ink);
-}
-
-.okr-chevron { font-size: 0.55rem; color: var(--ink-faint); transition: transform 0.3s; }
-.okr.open .okr-chevron { transform: rotate(90deg); }
-
-.okr-body { display: none; padding: 0 1.6rem 1.5rem; background: var(--gold-pale); }
-.okr.open .okr-body { display: block; }
-
-.kr-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.5rem; }
-
-.kr {
-  display: grid;
-  grid-template-columns: 2.5rem 1fr;
-  gap: 0.75rem;
-  font-size: 0.85rem;
-}
-
-.kr-num { font-size: 0.62rem; color: var(--gold); padding-top: 0.1rem; letter-spacing: 0.05em; }
-.kr-texto { color: var(--ink-soft); font-weight: 300; }
-
-/* ─── AMEAÇAS ─── */
-.ameaca-list { display: flex; flex-direction: column; border: 1px solid var(--rule); }
-.ameaca-list > * + * { border-top: 1px solid var(--rule); }
-
-.ameaca {
-  background: var(--bg);
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.ameaca-header {
-  padding: 1rem 1.6rem;
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
-  align-items: center;
-  gap: 1rem;
-}
-
-.ameaca:hover .ameaca-header { background: var(--gold-pale); }
-.ameaca.open .ameaca-header { background: var(--gold-pale); }
-
-.ameaca-id { font-size: 0.58rem; color: var(--ink-dim); letter-spacing: 0.12em; }
-.ameaca-nome { font-size: 0.92rem; font-weight: 400; color: var(--ink); }
-
-.risk-tag {
-  font-size: 0.58rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.12rem 0.5rem;
-}
-
-.risk-c { color: #8a2020; border: 1px solid rgba(140,40,40,0.2); }
-.risk-h { color: #7a4a10; border: 1px solid rgba(140,100,20,0.2); }
-
-.ameaca-chevron { font-size: 0.55rem; color: var(--ink-faint); transition: transform 0.3s; }
-.ameaca.open .ameaca-chevron { transform: rotate(90deg); }
-
-.ameaca-body { display: none; padding: 0 1.6rem 1.2rem; background: var(--gold-pale); }
-.ameaca.open .ameaca-body { display: block; }
-
-.ameaca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 0.75rem; font-size: 0.82rem; }
-.ameaca-box { padding: 0.75rem 1rem; background: var(--bg); border: 1px solid var(--rule); }
-.ameaca-box-label { font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-dim); margin-bottom: 0.3rem; }
-.ameaca-box-val { color: var(--ink-soft); line-height: 1.7; font-weight: 300; }
-
-/* ─── DECISÕES ─── */
-.decisoes { display: flex; flex-direction: column; border: 1px solid var(--rule); }
-.decisoes > * + * { border-top: 1px solid var(--rule); }
-
-.decisao {
-  background: var(--bg);
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.decisao-header {
-  padding: 1rem 1.6rem;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 1rem;
-}
-
-.decisao:hover .decisao-header { background: var(--gold-pale); }
-.decisao.open .decisao-header { background: var(--gold-pale); }
-
-.decisao-id { font-size: 0.58rem; color: var(--gold); letter-spacing: 0.1em; }
-.decisao-nome { font-size: 0.92rem; font-weight: 400; color: var(--ink); }
-.decisao-chevron { font-size: 0.55rem; color: var(--ink-faint); transition: transform 0.3s; }
-.decisao.open .decisao-chevron { transform: rotate(90deg); }
-
-.decisao-body { display: none; padding: 1rem 1.6rem 1.2rem; background: var(--gold-pale); border-top: 1px solid var(--rule); }
-.decisao.open .decisao-body { display: block; }
-
-.filtro-steps { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-.filtro-step {
-  display: grid;
-  grid-template-columns: 1.75rem 1fr;
-  gap: 0.75rem;
-  font-size: 0.85rem;
-}
-
-.step-n { font-size: 0.62rem; color: var(--gold); padding-top: 0.15rem; }
-.step-t { color: var(--ink-soft); line-height: 1.7; font-weight: 300; }
-
-.decisao-regra {
-  margin-top: 1rem;
-  padding: 0.7rem 1rem;
-  border-left: 1.5px solid var(--ink-faint);
-  font-size: 0.82rem;
-  color: var(--ink-soft);
-  font-style: italic;
-  font-weight: 300;
-}
-
-/* ─── RENÚNCIAS (DR-04) ─── */
-.renuncias {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: 0.5rem;
-}
-
-.renuncia {
-  font-size: 0.88rem;
-  line-height: 1.75;
-  color: var(--ink-soft);
-  font-weight: 300;
-}
-
-.renuncia-sujeito {
-  font-weight: 500;
-  color: var(--ink);
-}
-
-.renuncias-nota {
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--rule);
-  font-style: italic;
-  font-size: 0.85rem;
-  color: var(--ink-dim);
-  font-weight: 300;
-}
-
-/* ─── PROJETOS / HORIZONTE ─── */
-.projeto {
-  border: 1px solid var(--rule);
-  margin-bottom: 1.5rem;
-}
-
-.projeto-header {
-  padding: 1.5rem 1.75rem;
-  border-bottom: 1px solid var(--rule);
-  background: var(--surface);
-}
-
-.projeto-tag {
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 0.5rem;
-}
-
-.projeto-titulo {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.35rem;
-  font-weight: 400;
-  color: var(--ink);
-  margin-bottom: 0.4rem;
-}
-
-.projeto-escopo { font-size: 0.85rem; color: var(--ink-soft); font-weight: 300; line-height: 1.7; font-style: italic; }
-
-.projeto-body { padding: 1.5rem 1.75rem; }
-
-.fases { display: flex; flex-direction: column; }
-
-.fase {
-  display: grid;
-  grid-template-columns: 4.5rem 1fr;
-  gap: 1.25rem;
-  padding: 0.9rem 0;
-  border-bottom: 1px solid var(--rule);
-  align-items: start;
-  font-size: 0.85rem;
-}
-
-.fase:last-child { border-bottom: none; }
-
-.fase-ano {
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  color: var(--gold);
-  padding-top: 0.1rem;
-}
-
-.fase-texto { color: var(--ink-soft); line-height: 1.7; font-weight: 300; }
-
-/* ─── FASE CATEGORIAS ─── */
-.fase-categorias {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.fase-cat {
-  display: grid;
-  grid-template-columns: 6rem 1fr;
-  gap: 0.5rem;
-  align-items: start;
-  font-size: 0.83rem;
-}
-
-.fase-cat-label {
-  font-size: 0.56rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--gold);
-  padding-top: 0.18rem;
-  font-weight: 400;
-}
-
-.fase-cat-itens {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  color: var(--ink-soft);
-  line-height: 1.65;
-  font-weight: 300;
-}
-
-.fase-cat-autor {
-  font-style: italic;
-  color: var(--ink-dim);
-  font-size: 0.92em;
-}
-
-/* ─── ROTINA ─── */
-.ritual {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--rule);
-}
-.ritual > * + * { border-top: 1px solid var(--rule); }
-
-.ritual-item {
-  display: flex;
-  gap: 2rem;
-  padding: 1.2rem 1.6rem;
-  background: var(--bg);
-  align-items: baseline;
-  transition: background 0.2s;
-}
-.ritual-item:hover { background: var(--gold-pale); }
-
-.ritual-period {
-  font-style: italic;
-  color: var(--ink-dim);
-  font-size: 0.9rem;
-  min-width: 120px;
-  flex-shrink: 0;
-}
-
-.ritual-acts {
-  font-weight: 300;
-  color: var(--ink-soft);
-  font-size: 0.92rem;
-  line-height: 1.7;
-}
-
-.ritual-note {
-  font-size: 0.75rem;
-  color: var(--ink-dim);
-  font-style: italic;
-  margin-top: 0.4rem;
-  display: block;
-}
-
-.inviolaveis {
-  border: 1px solid var(--rule);
-  margin-top: 2.5rem;
-}
-
-.inviolaveis-titulo {
-  padding: 0.85rem 1.6rem;
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  border-bottom: 1px solid var(--rule);
-  background: var(--surface);
-}
-
-.inviolavel {
-  display: flex; align-items: center; gap: 0.75rem;
-  font-size: 0.88rem; color: var(--ink-soft);
-  padding: 0.65rem 1.6rem;
-  border-bottom: 1px solid rgba(26,22,18,0.06);
-  font-weight: 300;
-}
-
-.inviolavel:last-child { border-bottom: none; }
-
-.inviolavel::before {
-  content: '';
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: var(--gold);
-  flex-shrink: 0;
-  opacity: 0.6;
-}
-
-/* ─── LEGADO ─── */
-#legado {
-  max-width: 620px;
-  margin: 0 auto;
-  padding: 8rem 2.5rem;
-  text-align: center;
-  border-top: 1px solid var(--rule);
-  position: relative;
-  z-index: 1;
-}
-
-.legado-eyebrow {
-  font-size: 0.62rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 3.5rem;
-}
-
-.legado-texto {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.1rem;
-  line-height: 2;
-  color: var(--ink-soft);
-  text-align: left;
-  font-weight: 300;
-}
-
-.legado-texto p + p { margin-top: 1.25rem; }
-
-.legado-final {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.15rem;
-  font-style: italic;
-  color: var(--gold);
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--rule);
-  font-weight: 300;
-}
-
-/* ─── FOOTER ─── */
-footer {
-  border-top: 1px solid var(--rule);
-  text-align: center;
-  padding: 2.5rem 2rem;
-  position: relative;
-  z-index: 1;
-}
-
-.footer-q {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 1rem;
-  color: var(--ink-dim);
-  font-weight: 300;
-}
-
-.footer-meta {
-  margin-top: 0.6rem;
-  font-size: 0.62rem;
-  color: var(--ink-faint);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-/* ─── RESPONSIVO ─── */
-@media (max-width: 680px) {
-  nav { padding: 0 1.25rem; }
-  .nav-links { display: none; }
-  .hero-telos { gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
-  .pilares-grid { grid-template-columns: 1fr; }
-  .ameaca-grid { grid-template-columns: 1fr; }
-  .papel-grid { grid-template-columns: 1fr; }
-  .eixo-modos { grid-template-columns: 1fr; }
-  .ritual-item { flex-direction: column; gap: 0.3rem; }
-  .ritual-period { min-width: unset; }
-}
+  :root {
+    --bg: #0E0E10;
+    --bg-soft: #15151A;
+    --paper: #1C1C22;
+    --ink: #ECE9E0;
+    --ink-soft: #B8B5AB;
+    --ghost: #6E6B62;
+    --faint: #2A2A30;
+    --accent: #D4B886;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist Mono', monospace;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 40px; }
+
+  /* COVER */
+  .cover {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 40px 80px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .cover-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    margin-bottom: 48px;
+  }
+
+  .cover-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(64px, 11vw, 104px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    margin-bottom: 56px;
+    color: var(--ink);
+  }
+
+  .cover-name em { font-style: italic; color: var(--accent); }
+
+  .cover-arbiter {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 460px;
+    margin-bottom: 80px;
+    border-left: 1px solid var(--accent);
+    padding-left: 20px;
+  }
+
+  .cover-meta {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--ghost);
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--faint);
+    margin: 72px 0;
+  }
+
+  .label {
+    font-size: 9px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 40px;
+  }
+
+  /* MISSÃO */
+  .mission {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(28px, 4.5vw, 40px);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin-bottom: 48px;
+    color: var(--ink);
+  }
+
+  .triad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--faint);
+    border-left: 1px solid var(--faint);
+  }
+
+  .triad-cell {
+    padding: 20px 0 20px 20px;
+    border-right: 1px solid var(--faint);
+    border-bottom: 1px solid var(--faint);
+  }
+
+  .triad-word {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+
+  .triad-sub {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--ghost);
+  }
+
+  /* PAPÉIS */
+  .role {
+    padding: 36px 0;
+    border-top: 1px solid var(--faint);
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 0 40px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .role.in { opacity: 1; transform: none; }
+  .role:last-child { border-bottom: 1px solid var(--faint); }
+
+  .role-num {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .role-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 22px;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+
+  .role-risk {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--ghost);
+    line-height: 1.6;
+  }
+
+  .role-body {
+    font-size: 12px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+
+  .role-body p + p { margin-top: 14px; }
+
+  .protocol {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: var(--paper);
+    border-left: 1px solid var(--accent);
+    font-size: 11px;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+
+  /* OKRs */
+  .okr {
+    padding: 32px 0;
+    border-top: 1px solid var(--faint);
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 0 40px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .okr.in { opacity: 1; }
+  .okr:last-child { border-bottom: 1px solid var(--faint); }
+
+  .okr-code {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .okr-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 20px;
+    color: var(--ink);
+  }
+
+  .kr { list-style: none; margin-top: 4px; }
+
+  .kr li {
+    font-size: 11px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    padding: 7px 0;
+    border-bottom: 1px solid var(--faint);
+    display: flex;
+    gap: 10px;
+  }
+
+  .kr li:last-child { border-bottom: none; }
+  .kr li::before { content: '—'; color: var(--ghost); flex-shrink: 0; }
+
+  /* ROADMAP DE ESTUDOS */
+  .roadmap {
+    padding: 24px 0;
+    border-top: 1px solid var(--faint);
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 0 40px;
+  }
+  .roadmap:last-child { border-bottom: 1px solid var(--faint); }
+
+  .roadmap-year {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-top: 2px;
+  }
+
+  .roadmap-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ghost);
+    margin: 14px 0 6px;
+  }
+
+  .roadmap ul { list-style: none; }
+  .roadmap li {
+    font-size: 11px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    padding: 4px 0;
+    display: flex;
+    gap: 10px;
+  }
+  .roadmap li::before { content: '·'; color: var(--accent); flex-shrink: 0; }
+
+  /* AMEAÇAS */
+  .threat {
+    padding: 20px 0;
+    border-top: 1px solid var(--faint);
+    display: grid;
+    grid-template-columns: 160px 1fr auto;
+    gap: 0 24px;
+    align-items: baseline;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .threat.in { opacity: 1; }
+  .threat:last-child { border-bottom: 1px solid var(--faint); }
+
+  .threat-area {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .threat-name { font-size: 12px; margin-bottom: 4px; color: var(--ink); }
+  .threat-desc { font-size: 11px; color: var(--ink-soft); line-height: 1.6; }
+
+  .badge {
+    font-size: 8px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border: 1px solid var(--faint);
+    padding: 3px 8px;
+    color: var(--ghost);
+    white-space: nowrap;
+    align-self: start;
+  }
+  .badge.hot { border-color: var(--accent); color: var(--accent); }
+
+  /* RITMO */
+  .rhythm {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--faint);
+    border-left: 1px solid var(--faint);
+  }
+
+  .rhythm-col {
+    border-right: 1px solid var(--faint);
+    border-bottom: 1px solid var(--faint);
+    padding: 24px 20px;
+  }
+
+  .rhythm-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .rhythm-items { list-style: none; }
+  .rhythm-item {
+    font-size: 11px;
+    color: var(--ink-soft);
+    padding: 6px 0;
+    border-bottom: 1px solid var(--faint);
+    line-height: 1.4;
+  }
+  .rhythm-item:last-child { border-bottom: none; }
+
+  /* OBITUÁRIO */
+  .obit-section {
+    padding: 80px 40px 120px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .obit-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(22px, 3.2vw, 30px);
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    margin-bottom: 64px;
+    color: var(--ink);
+  }
+
+  .obit-text p + p { margin-top: 28px; }
+  .obit-text em { font-style: italic; color: var(--accent); }
+
+  .closing {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    margin-bottom: 14px;
+  }
+
+  .motto {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 22px;
+    color: var(--accent);
+    margin-bottom: 80px;
+  }
+
+  .version { font-size: 10px; color: var(--ghost); letter-spacing: 0.08em; }
+
+  /* NAV */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    background: rgba(14,14,16,0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--faint);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .nav.show { opacity: 1; pointer-events: all; }
+
+  .nav-id {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+
+  .nav-links a {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ghost);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  .section { padding: 80px 0; }
+
+  /* LOCK */
+  #lock {
+    position: fixed; inset: 0; z-index: 1000;
+    background: var(--bg);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 24px;
+    transition: opacity 0.5s ease;
+  }
+  #lock.gone { opacity: 0; pointer-events: none; }
+  .lock-seal { width: 56px; height: 56px; }
+  .lock-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--ink);
+  }
+  .lock-rule { width: 40px; height: 1px; background: var(--accent); }
+  .lock-form { display: flex; gap: 8px; }
+  .lock-input {
+    background: var(--paper);
+    border: 1px solid var(--faint);
+    color: var(--ink);
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    padding: 10px 14px;
+    outline: none;
+    letter-spacing: 0.1em;
+  }
+  .lock-input:focus { border-color: var(--accent); }
+  .lock-input.err { border-color: #8a3a3a; animation: shake 0.4s; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)}
+  }
+  .lock-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .lock-btn:hover { background: var(--accent); color: var(--bg); }
+
+  @media (max-width: 560px) {
+    .wrap, .cover, .obit-section { padding-left: 24px; padding-right: 24px; }
+    .nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .role, .okr, .threat, .roadmap { grid-template-columns: 1fr; gap: 12px; }
+    .triad, .rhythm { grid-template-columns: 1fr; }
+    .threat { grid-template-columns: 1fr auto; }
+    .threat-area { grid-column: 1 / -1; }
+  }
 </style>
 </head>
 <body>
 
-<!-- LOCK -->
 <div id="lock">
   <svg class="lock-seal" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="26" cy="26" r="25" stroke="#c4b8a4" stroke-width="1"/>
-    <circle cx="26" cy="26" r="18" stroke="#c4b8a4" stroke-width="0.5"/>
-    <text x="26" y="31" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="12" font-style="italic" fill="#8a7a62">YB</text>
+    <circle cx="26" cy="26" r="25" stroke="#D4B886" stroke-width="1"/>
+    <circle cx="26" cy="26" r="18" stroke="#D4B886" stroke-width="0.5"/>
+    <text x="26" y="31" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="12" font-style="italic" fill="#D4B886">YB</text>
   </svg>
   <div class="lock-title">Life OS</div>
   <div class="lock-rule"></div>
@@ -950,850 +504,350 @@ footer {
   </div>
 </div>
 
-<!-- NAV -->
-<nav>
-  <a href="#hero" class="nav-brand">Life OS</a>
+<nav class="nav" id="nav">
+  <span class="nav-id">Yuri Braz</span>
   <ul class="nav-links">
-    <li><a href="#eixo">O Eixo</a></li>
-    <li><a href="#principios">Princípios</a></li>
+    <li><a href="#missao">Missão</a></li>
     <li><a href="#papeis">Papéis</a></li>
     <li><a href="#okrs">OKRs</a></li>
-    <li><a href="#ameacas">Ameaças</a></li>
-    <li><a href="#decisoes">Decisões</a></li>
-    <li><a href="#horizonte">Horizonte</a></li>
-    <li><a href="#rotina">Rotina</a></li>
+    <li><a href="#estudos">Estudos</a></li>
+    <li><a href="#ritmo">Ritmo</a></li>
     <li><a href="#legado">Legado</a></li>
   </ul>
 </nav>
 
-<!-- HERO -->
-<div id="hero">
-  <div class="hero-rule"></div>
-  <div class="hero-eyebrow">Life OS · v3.0 · 2026</div>
-  <h1 class="hero-title">Plano de<br><em>Vida</em></h1>
-  <p class="hero-missao">Viver com integridade, contemplação e presença — cultivando a Verdade, o Bem e o Belo em cada escolha, relação e obra que deixo no mundo.</p>
-  <div class="hero-telos">
-    <div class="telos-item">
-      <span class="telos-item-name">Integridade</span>
-      <span class="telos-item-sub">relação consigo</span>
-    </div>
-    <div class="telos-item" style="padding: 0 2rem; border-left: 1px solid var(--rule); border-right: 1px solid var(--rule);">
-      <span class="telos-item-name">Contemplação</span>
-      <span class="telos-item-sub">relação com Deus</span>
-    </div>
-    <div class="telos-item">
-      <span class="telos-item-name">Presença</span>
-      <span class="telos-item-sub">relação com o outro</span>
-    </div>
-  </div>
-  <div class="hero-scroll-line">
-    <span>Explorar</span>
-    <div></div>
-  </div>
+<div class="cover" id="missao">
+  <p class="cover-eyebrow">Life OS · v6.0 · 2026</p>
+  <h1 class="cover-name">Yuri<br><em>Braz.</em></h1>
+  <blockquote class="cover-arbiter">
+    Isso está alinhado com o homem que quero ser no meu necrológio?
+  </blockquote>
+  <p class="cover-meta">O árbitro final. A pergunta que precede toda decisão.</p>
 </div>
 
-<!-- O EIXO -->
-<section id="eixo">
-  <div class="s-eyebrow">O Motor</div>
-  <h2 class="s-title">O Eixo</h2>
-  <p class="s-lead">A pergunta que precede toda decisão — o árbitro final de todo conflito.</p>
+<div class="wrap">
 
-  <blockquote class="eixo-quote">A vida não é uma busca pela felicidade, mas pela liberdade de ser — e a liberdade se prova nas escolhas concretas, não nas intenções.</blockquote>
+  <hr>
 
-  <div class="eixo-pergunta">Isso está alinhado com o homem que quero ser no meu necrológio?</div>
+  <p class="label">Missão</p>
+  <p class="mission">Cultivar a Verdade, o Bem e o Belo em cada escolha, relação e obra que deixo no mundo.</p>
 
-  <p class="eixo-texto">Quando há conflito entre contemplação e ambição, entre presença e produção, entre quietude e crescimento — esta pergunta é o árbitro final. Os KRs, os protocolos e os papéis existem para servir a esta pergunta, não o inverso.</p>
-
-  <div class="eixo-modos">
-    <div class="modo">
-      <div class="modo-label">Modo</div>
-      <div class="modo-nome">Construção</div>
-      <div class="modo-desc">Expansão deliberada — carreira, finanças, conhecimento.</div>
-      <span class="modo-badge">Urgência operacional</span>
+  <div class="triad">
+    <div class="triad-cell">
+      <span class="triad-word">Integridade</span>
+      <span class="triad-sub">relação consigo</span>
     </div>
-    <div class="modo">
-      <div class="modo-label">Modo</div>
-      <div class="modo-nome">Ser</div>
-      <div class="modo-desc">Contemplação, família, presença.</div>
-      <span class="modo-badge">Precedência estrutural</span>
+    <div class="triad-cell">
+      <span class="triad-word">Contemplação</span>
+      <span class="triad-sub">relação com Deus</span>
+    </div>
+    <div class="triad-cell">
+      <span class="triad-word">Presença</span>
+      <span class="triad-sub">relação com o outro</span>
     </div>
   </div>
 
-  <p class="eixo-tensao">Tensão gerida, não ignorada.</p>
-</section>
+  <hr>
 
-<!-- OS PRINCÍPIOS -->
-<section id="principios">
-  <div class="s-eyebrow">Os Fundamentos</div>
-  <h2 class="s-title">Os Princípios</h2>
-  <p class="s-lead">Não regras a cumprir — convicções a habitar. Reduzidas ao essencial.</p>
+  <div class="section" id="papeis">
+    <p class="label">Três Papéis · A ordem importa</p>
 
-  <div class="pilares-grid">
-
-    <div class="pilar" onclick="toggle(this)">
-      <div class="pilar-header">
-        <span class="pilar-num">I</span>
-        <span class="pilar-nome">Liberdade de Ser</span>
-      </div>
-      <div class="pilar-excerpt">A vida não é uma busca pela felicidade, mas pela liberdade de ser. Elimine a lacuna entre o que acredita e o que faz.</div>
-      <div class="pilar-corpo">Entregue-se ao que é. Conecte-se com o mundo ao redor, compreendendo sua própria essência. Tenha coragem emocional para fazer o que precisa ser feito. Elimine a lacuna entre o que acredita e o que faz. Tenha gratidão, por tudo.</div>
-    </div>
-
-    <div class="pilar" onclick="toggle(this)">
-      <div class="pilar-header">
-        <span class="pilar-num">II</span>
-        <span class="pilar-nome">Antifragilidade</span>
-      </div>
-      <div class="pilar-excerpt">Crie restrições deliberadas. Aprecie agentes estressores. Estabeleça objetivos com 50–70% de chance de sucesso.</div>
-      <div class="pilar-corpo">Crie restrições para si mesmo. Aprecie agentes estressores — eles constroem antifragilidade. É preciso aceitar ser iniciante para transcendê-lo. Estabeleça objetivos nos quais você tem 50–70% de chance de sucesso. Peça feedback. Reconheça o sofrimento como parte do processo.</div>
-    </div>
-
-    <div class="pilar" onclick="toggle(this)">
-      <div class="pilar-header">
-        <span class="pilar-num">III</span>
-        <span class="pilar-nome">Corpo como Base</span>
-      </div>
-      <div class="pilar-excerpt">O corpo é a plataforma de tudo o mais. Movimento, sono, nutrição real — sem negociação.</div>
-      <div class="pilar-corpo">Mantenha o corpo em movimento o máximo que puder. Musculação e HIIT. Durma 7–8 horas com consistência de horário. Nutra-se com alimentos naturais, da região e da estação. Coma devagar, até 80% de saciedade. Sempre coma à mesa.</div>
-    </div>
-
-    <div class="pilar" onclick="toggle(this)">
-      <div class="pilar-header">
-        <span class="pilar-num">IV</span>
-        <span class="pilar-nome">Artesanato</span>
-      </div>
-      <div class="pilar-excerpt">Uma atividade por vez. Atenção plena no trabalho. Flow ou nada. Nunca a aparência de produtividade no lugar da substância.</div>
-      <div class="pilar-corpo">Realize o trabalho com o cuidado de um artesão. Concentre-se em uma única atividade por vez — não fragmente a atenção. Entre em estado de flow. Nunca reclame. Busque agregar valor real, não parecer ocupado.</div>
-    </div>
-
-    <div class="pilar" onclick="toggle(this)">
-      <div class="pilar-header">
-        <span class="pilar-num">V</span>
-        <span class="pilar-nome">Fidelidade Cotidiana</span>
-      </div>
-      <div class="pilar-excerpt">Disciplina não é punição — é a escolha diária de ser quem você quer ser. A única ação errada é não agir.</div>
-      <div class="pilar-corpo">A disciplina não é punição — é a fidelidade cotidiana a quem você quer ser. Deteste a mediocridade. Comece pela tarefa mais difícil. Assuma responsabilidade pela própria vida sem exceções. A única ação errada é não agir. Aceite a dor necessária com serenidade — sem drama, sem orgulho.</div>
-    </div>
-
-    <div class="pilar" onclick="toggle(this)">
-      <div class="pilar-header">
-        <span class="pilar-num">VI</span>
-        <span class="pilar-nome">Beleza e Arte</span>
-      </div>
-      <div class="pilar-excerpt">A beleza amplifica alegrias e redime sofrimentos. Cultivar sensibilidade é cultivar humanidade.</div>
-      <div class="pilar-corpo">A beleza amplifica alegrias e redime sofrimentos. A arte serve para compreender, suportar e transformar a realidade. Cultive sensibilidade. Aceite que o belo é imperfeito, impermanente e incompleto — wabi-sabi. Criar é também uma forma de contemplar.</div>
-    </div>
-
-    <div class="pilar" onclick="toggle(this)">
-      <div class="pilar-header">
-        <span class="pilar-num">VII</span>
-        <span class="pilar-nome">Coragem</span>
-      </div>
-      <div class="pilar-excerpt">Coragem não é ausência de medo — é a escolha de agir mesmo assim. Seja fiel a si mesmo mesmo quando custa.</div>
-      <div class="pilar-corpo">Todos os sentimentos negativos têm raiz no medo. Para enfraquecê-lo: habite o momento presente, pratique o desapego do que não pode mudar, transforme expectativas em preferências. A coragem não é ausência de medo — é a escolha de agir mesmo assim. Seja fiel a si mesmo mesmo quando custa.</div>
-    </div>
-
-    <div class="pilar" onclick="toggle(this)">
-      <div class="pilar-header">
-        <span class="pilar-num">VIII</span>
-        <span class="pilar-nome">Quietude</span>
-      </div>
-      <div class="pilar-excerpt">A mente não pode ser conquistada — apenas habitada. Afaste-se e seja o observador de si mesmo.</div>
-      <div class="pilar-corpo">Respire. Afaste-se da experiência e seja o observador de si mesmo. A mente não pode ser conquistada — apenas habitada. Perdoe-se e recomece sempre. Aceite todos os sentimentos sem julgamento. Pratique o desapego do que não pode ser controlado. A quietude não é ausência — é presença plena.</div>
-    </div>
-
-    <div class="pilar" onclick="toggle(this)">
-      <div class="pilar-header">
-        <span class="pilar-num">IX</span>
-        <span class="pilar-nome">Comunhão</span>
-      </div>
-      <div class="pilar-excerpt">Reconheça-se parte de algo maior. Pratique o exame de consciência. Viva sem ansiar por explicações para o inexplicável.</div>
-      <div class="pilar-corpo">Reconheça-se parte de uma Consciência maior — não valorizando a individualidade, mas a comunhão com todos os seres. Reduza os pensamentos e viva mais. Conecte-se com o mundo pelos sentidos. Pratique o exame de consciência. Viva em paz, desenvolvendo virtudes, sem ansiar por explicações para os grandes mistérios.</div>
-    </div>
-
-    <div class="pilar" onclick="toggle(this)">
-      <div class="pilar-header">
-        <span class="pilar-num">X</span>
-        <span class="pilar-nome">Essencialismo</span>
-      </div>
-      <div class="pilar-excerpt">Uma prioridade por vez. O não dito com clareza é mais valioso que o sim dito por fraqueza.</div>
-      <div class="pilar-corpo">Escolha apenas o essencial. Tenha uma prioridade por vez. A liberdade real pertence a quem sabe estabelecer limites. Esvazie-se do não-essencial para conectar-se com mais profundidade ao que verdadeiramente importa. O não dito com clareza é mais valioso que o sim dito por fraqueza.</div>
-    </div>
-
-  </div>
-</section>
-
-<!-- OS PAPÉIS -->
-<section id="papeis">
-  <div class="s-eyebrow">As Identidades Ativas</div>
-  <h2 class="s-title">Os Papéis</h2>
-  <p class="s-lead">Cinco identidades ativas. Cada uma tem uma missão e um risco. A ordem importa.</p>
-
-  <div class="papeis">
-
-    <div class="papel" onclick="togglePapel(this)">
-      <span class="papel-icon">👨‍👩‍👧‍👦</span>
+    <div class="role">
       <div>
-        <div class="papel-info-nome">1 · O Pai e Marido Presente</div>
-        <div class="papel-info-tag">Rituais familiares · presença real · casamento como parceria de valores</div>
+        <span class="role-num">01 · Prioritário</span>
+        <h3 class="role-title">Pai e Marido Presente</h3>
+        <p class="role-risk">A razão de tudo</p>
       </div>
-      <span class="papel-chevron">▶</span>
-    </div>
-    <div class="papel-detalhe">
-      <div class="papel-grid">
-        <div>
-          <div class="papel-label">O que faz</div>
-          <div class="papel-texto">Constrói com a esposa um lar de amor e valores. Está presente de fato com Victor Hugo e Isadora — não apenas fisicamente, mas com atenção real e deliberada.</div>
-        </div>
-        <div>
-          <div class="papel-label">Risco crítico</div>
-          <div class="papel-texto">Presença física sem presença real. Ambição consumindo a energia do lar. Os filhos parando de buscar você sem que você perceba.</div>
-        </div>
-      </div>
-      <div class="protocolo-ativo">
-        <span class="protocolo-ativo-label">Protocolo de contenção</span>
-        Se a esposa reportar ausência emocional ou os rituais familiares desaparecerem, todos os compromissos não-família e não-saúde são suspensos por 7 dias para recalibração — sem exceção.
+      <div class="role-body">
+        <p>Construir com a esposa um lar de amor e valores. Estar com Victor Hugo e Isadora com atenção real — não apenas fisicamente. Que eles cresçam sabendo que sempre podem te buscar, e que aprendam mais pelo que veem do que pelo que ouvem.</p>
+        <div class="protocol">Se a esposa reportar ausência emocional ou os rituais familiares desaparecerem — todos os compromissos não-família e não-saúde suspensos por 7 dias. Sem exceção.</div>
       </div>
     </div>
 
-    <div class="papel" onclick="togglePapel(this)">
-      <span class="papel-icon">🧘</span>
+    <div class="role">
       <div>
-        <div class="papel-info-nome">2 · O Contemplativo</div>
-        <div class="papel-info-tag">Rotina espiritual inabalável · serenidade como estado-base</div>
+        <span class="role-num">02</span>
+        <h3 class="role-title">Base — Corpo e Espírito</h3>
+        <p class="role-risk">A fundação de tudo mais</p>
       </div>
-      <span class="papel-chevron">▶</span>
-    </div>
-    <div class="papel-detalhe">
-      <div class="papel-grid">
-        <div>
-          <div class="papel-label">O que faz</div>
-          <div class="papel-texto">Pratica meditação diária, ioga, exame de consciência, leitura sagrada. Habita o silêncio como lar — não como ausência de ruído, mas como presença de si.</div>
-        </div>
-        <div>
-          <div class="papel-label">Risco crítico</div>
-          <div class="papel-texto">A prática contemplativa ser a primeira sacrificada quando o dia fica cheio — exatamente quando mais é necessária.</div>
-        </div>
-      </div>
-      <div class="protocolo-ativo">
-        <span class="protocolo-ativo-label">Protocolo de contenção</span>
-        Meditação matinal (10 min mínimo) e exame noturno são inegociáveis. Se a meditação for omitida por 3 dias consecutivos, o dia seguinte começa com 30 minutos de contemplação — sem negociação, sem substituição.
+      <div class="role-body">
+        <p>Meditação, exame de consciência, treino de força, sono de qualidade. Não são atividades separadas — são a mesma coisa: manter o instrumento afinado para que tudo o mais seja possível.</p>
+        <p>Sem base, nenhum outro papel funciona. Este papel não se negocia porque é o que sustenta os outros dois.</p>
+        <div class="protocol">Meditação matinal: 10 min mínimo. Se omitida 3 dias seguidos → 30 min no dia seguinte, sem substituição.</div>
       </div>
     </div>
 
-    <div class="papel" onclick="togglePapel(this)">
-      <span class="papel-icon">💪</span>
+    <div class="role">
       <div>
-        <div class="papel-info-nome">3 · O Atleta Disciplinado</div>
-        <div class="papel-info-tag">Treino 5x/semana · sono 7–8h · protocolo sem negociação</div>
+        <span class="role-num">03</span>
+        <h3 class="role-title">Arquiteto de Segurança</h3>
+        <p class="role-risk">Autoridade pelo trabalho, não pela ostentação</p>
       </div>
-      <span class="papel-chevron">▶</span>
-    </div>
-    <div class="papel-detalhe">
-      <div class="papel-grid">
-        <div>
-          <div class="papel-label">O que faz</div>
-          <div class="papel-texto">Mantém o corpo como templo e alavanca. Treino de força 5x/semana, sono 7–8h consistente, nutrição estratégica.</div>
-        </div>
-        <div>
-          <div class="papel-label">Risco</div>
-          <div class="papel-texto">Trabalho ou compromissos invadindo o tempo de treino. Exceções que viram regra e redefinem o padrão para baixo.</div>
-        </div>
+      <div class="role-body">
+        <p>Construir profundidade real em Security Architecture e devolver ao mundo o que se aprende. Operar como estrategista, não como operador. Transformar 15 anos de prática em voz pública — através de escrita, ensino e generosidade técnica.</p>
+        <div class="protocol">Estudo sem publicação não conta. Perfeccionismo é procrastinação disfarçada.</div>
       </div>
     </div>
+  </div>
 
-    <div class="papel" onclick="togglePapel(this)">
-      <span class="papel-icon">🔐</span>
+  <hr>
+
+  <div class="section" id="okrs">
+    <p class="label">OKRs 2026</p>
+
+    <div class="okr">
       <div>
-        <div class="papel-info-nome">4 · O Arquiteto de Segurança</div>
-        <div class="papel-info-tag">Security Architecture · Zero Trust · Cloud · IA</div>
+        <span class="okr-code">O1</span>
+        <p class="okr-title">Base Biológica</p>
       </div>
-      <span class="papel-chevron">▶</span>
-    </div>
-    <div class="papel-detalhe">
-      <div class="papel-grid">
-        <div>
-          <div class="papel-label">O que faz</div>
-          <div class="papel-texto">Aprofunda Security Architecture moderna. Opera como estrategista — não como operador técnico de execução. Constrói autoridade pública, não perfeccionismo privado.</div>
-        </div>
-        <div>
-          <div class="papel-label">Risco</div>
-          <div class="papel-texto">Dispersão em múltiplas tecnologias. Estudo sem publicação — perfeccionismo como procrastinação disfarçada.</div>
-        </div>
-      </div>
+      <ul class="kr">
+        <li>Treino de força 5×/semana em ≥ 40 semanas do ano</li>
+        <li>Peso e % gordura em faixa saudável ao longo do ano</li>
+        <li>Sono médio 7–8h/noite em ≥ 80% das noites</li>
+      </ul>
     </div>
 
-    <div class="papel" onclick="togglePapel(this)">
-      <span class="papel-icon">🧭</span>
+    <div class="okr">
       <div>
-        <div class="papel-info-nome">5 · O Filósofo-Praticante</div>
-        <div class="papel-info-tag">Platão como método · diário filosófico · decisões testadas na prática</div>
+        <span class="okr-code">O2</span>
+        <p class="okr-title">Security Architecture</p>
       </div>
-      <span class="papel-chevron">▶</span>
-    </div>
-    <div class="papel-detalhe">
-      <div class="papel-grid">
-        <div>
-          <div class="papel-label">O que faz</div>
-          <div class="papel-texto">Estuda, medita, examina a consciência. Platão como método de vida — não curiosidade intelectual. A filosofia se testa nas decisões concretas do dia.</div>
-        </div>
-        <div>
-          <div class="papel-label">Risco</div>
-          <div class="papel-texto">Intelectualismo sem prática — falar o que não se vive.</div>
-        </div>
-      </div>
+      <ul class="kr">
+        <li>Concluir as 3 leituras técnicas previstas para 2026</li>
+        <li>Publicar ≥ 3 artigos técnicos de perspectiva própria</li>
+        <li>2026 é ano de leitura e escrita — sem certificação nova</li>
+      </ul>
     </div>
 
+    <div class="okr">
+      <div>
+        <span class="okr-code">O3</span>
+        <p class="okr-title">Alicerce Financeiro</p>
+      </div>
+      <ul class="kr">
+        <li>R$ 50k aportados em investimentos até 31/12/2026</li>
+        <li>Revisão financeira mensal em ≥ 10 dos 12 meses</li>
+        <li>Plano de quitação da casa atualizado e validado até Q2</li>
+      </ul>
+    </div>
   </div>
-</section>
 
-<!-- OKRs 2026 -->
-<section id="okrs">
-  <div class="s-eyebrow">Objetivos Anuais</div>
-  <h2 class="s-title">OKRs 2026</h2>
-  <p class="s-lead">Quatro objetivos. Suficientes para um ano com integridade.</p>
+  <hr>
 
-  <div class="okr-list">
+  <div class="section" id="estudos">
+    <p class="label">Roadmap · Leituras & Certificações</p>
 
-    <div class="okr" onclick="toggleOkr(this)">
-      <div class="okr-header">
-        <div class="okr-dot" style="background:#c04040"></div>
-        <div class="okr-obj">O1 · Base Biológica</div>
-        <span class="okr-chevron">▶</span>
-      </div>
-      <div class="okr-body">
-        <ul class="kr-list">
-          <li class="kr"><span class="kr-num">KR1</span><span class="kr-texto">Treino de força 5x/semana em ≥ 40 semanas do ano</span></li>
-          <li class="kr"><span class="kr-num">KR2</span><span class="kr-texto">Peso e % gordura corporal em faixa saudável ao longo do ano</span></li>
-          <li class="kr"><span class="kr-num">KR3</span><span class="kr-texto">Sono médio 7–8h/noite em ≥ 80% das noites</span></li>
+    <div class="roadmap">
+      <div class="roadmap-year">2026 · Leitura</div>
+      <div>
+        <p class="roadmap-title">Leituras (O'Reilly · foco)</p>
+        <ul>
+          <li>The Linux Command Line, 2nd Ed. — William Shotts</li>
+          <li>Container Security — Liz Rice</li>
+          <li>Zero Trust Networks — Gilman & Barth</li>
+        </ul>
+        <p class="roadmap-title">Certificações</p>
+        <ul>
+          <li>Nenhuma. Ano de leitura e escrita.</li>
         </ul>
       </div>
     </div>
 
-    <div class="okr" onclick="toggleOkr(this)">
-      <div class="okr-header">
-        <div class="okr-dot" style="background:#4a8aaa"></div>
-        <div class="okr-obj">O2 · Security Architecture</div>
-        <span class="okr-chevron">▶</span>
-      </div>
-      <div class="okr-body">
-        <ul class="kr-list">
-          <li class="kr"><span class="kr-num">KR1</span><span class="kr-texto">Concluir The Linux Command Line + iniciar Container Security (Liz Rice)</span></li>
-          <li class="kr"><span class="kr-num">KR2</span><span class="kr-texto">Concluir Zero Trust Networks (Gilman &amp; Barth)</span></li>
-          <li class="kr"><span class="kr-num">KR3</span><span class="kr-texto">Publicar ≥ 1 artigo técnico de perspectiva própria</span></li>
+    <div class="roadmap">
+      <div class="roadmap-year">2027 · Cloud</div>
+      <div>
+        <p class="roadmap-title">Leituras (O'Reilly · foco)</p>
+        <ul>
+          <li>Practical Cloud Native Security — Chris Dotson</li>
+          <li>Identity-Native Infrastructure Access Management — Pavlo et al.</li>
+          <li>The Staff Engineer's Path — Tanya Reilly</li>
+        </ul>
+        <p class="roadmap-title">Certificação alvo</p>
+        <ul>
+          <li>CCSP — Certified Cloud Security Professional (ISC²)</li>
         </ul>
       </div>
     </div>
 
-    <div class="okr" onclick="toggleOkr(this)">
-      <div class="okr-header">
-        <div class="okr-dot" style="background:#7a5a9a"></div>
-        <div class="okr-obj">O3 · Filosofia Vivida</div>
-        <span class="okr-chevron">▶</span>
-      </div>
-      <div class="okr-body">
-        <ul class="kr-list">
-          <li class="kr"><span class="kr-num">KR1</span><span class="kr-texto">Ler e anotar ≥ 4 diálogos de Platão ao longo do ano</span></li>
-          <li class="kr"><span class="kr-num">KR2</span><span class="kr-texto">Manter diário filosófico com ≥ 3 entradas/semana</span></li>
-          <li class="kr"><span class="kr-num">KR3</span><span class="kr-texto">Documentar ≥ 3 decisões concretas influenciadas pelo estudo</span></li>
+    <div class="roadmap">
+      <div class="roadmap-year">2028+ · Profundidade</div>
+      <div>
+        <p class="roadmap-title">Leituras</p>
+        <ul>
+          <li>Building Secure & Reliable Systems — Google / O'Reilly</li>
+          <li>Security Engineering, 3rd Ed. — Ross Anderson</li>
+          <li>AI Engineering — Chip Huyen (O'Reilly)</li>
+        </ul>
+        <p class="roadmap-title">Certificação alvo</p>
+        <ul>
+          <li>SABSA Foundation (SCF) — porta de entrada à arquitetura formal</li>
         </ul>
       </div>
     </div>
+  </div>
 
-    <div class="okr" onclick="toggleOkr(this)">
-      <div class="okr-header">
-        <div class="okr-dot" style="background:#8b6914"></div>
-        <div class="okr-obj">O4 · Alicerce Financeiro</div>
-        <span class="okr-chevron">▶</span>
+  <hr>
+
+  <div class="section">
+    <p class="label">Threat Model · O que pode destruir o sistema por dentro</p>
+
+    <div class="threat">
+      <span class="threat-area">T1 · Família</span>
+      <div>
+        <p class="threat-name">Negligência por Ambição</p>
+        <p class="threat-desc">Trabalho consumindo a presença real. Filhos parando de te buscar sem que você perceba.</p>
       </div>
-      <div class="okr-body">
-        <ul class="kr-list">
-          <li class="kr"><span class="kr-num">KR1</span><span class="kr-texto">R$ 50k aportados em investimentos até 31/12/2026</span></li>
-          <li class="kr"><span class="kr-num">KR2</span><span class="kr-texto">Revisão financeira mensal em ≥ 10 dos 12 meses</span></li>
-          <li class="kr"><span class="kr-num">KR3</span><span class="kr-texto">Plano de quitação da casa atualizado e validado até Q2</span></li>
+      <span class="badge hot">Crítico</span>
+    </div>
+
+    <div class="threat">
+      <span class="threat-area">T2 · Espírito</span>
+      <div>
+        <p class="threat-name">Degradação Espiritual Silenciosa</p>
+        <p class="threat-desc">O primeiro sistema sacrificado e o último percebido quando degradado. Manifesta como reatividade crescente.</p>
+      </div>
+      <span class="badge hot">Crítico</span>
+    </div>
+
+    <div class="threat">
+      <span class="threat-area">T3 · Foco</span>
+      <div>
+        <p class="threat-name">Dispersão</p>
+        <p class="threat-desc">Mais de 2 áreas de estudo ativas simultaneamente. Profundidade nunca atingida.</p>
+      </div>
+      <span class="badge">Alto</span>
+    </div>
+
+    <div class="threat">
+      <span class="threat-area">T4 · Corpo</span>
+      <div>
+        <p class="threat-name">Burnout Silencioso</p>
+        <p class="threat-desc">Acúmulo mascarado de produtividade. Instala-se devagar.</p>
+      </div>
+      <span class="badge">Alto</span>
+    </div>
+
+    <div class="threat">
+      <span class="threat-area">T5 · Valores</span>
+      <div>
+        <p class="threat-name">Desvio por Pressão Social</p>
+        <p class="threat-desc">Concessões pequenas que redefinem quem você é. O desejo de agradar como vetor de corrosão.</p>
+      </div>
+      <span class="badge">Alto</span>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="section" id="ritmo">
+    <p class="label">Ritmo Diário</p>
+    <div class="rhythm">
+      <div class="rhythm-col">
+        <span class="rhythm-label">Manhã</span>
+        <ul class="rhythm-items">
+          <li class="rhythm-item">Contemplação e meditação</li>
+          <li class="rhythm-item">Estudo — Deep Work</li>
+          <li class="rhythm-item">Treino</li>
+          <li class="rhythm-item">Primeira refeição</li>
+        </ul>
+      </div>
+      <div class="rhythm-col">
+        <span class="rhythm-label">Dia</span>
+        <ul class="rhythm-items">
+          <li class="rhythm-item">Tarefa mais difícil primeiro</li>
+          <li class="rhythm-item">Almoço à mesa, sem telas</li>
+          <li class="rhythm-item">Pausa e caminhada</li>
+          <li class="rhythm-item">Fechamento do dia</li>
+        </ul>
+      </div>
+      <div class="rhythm-col">
+        <span class="rhythm-label">Noite</span>
+        <ul class="rhythm-items">
+          <li class="rhythm-item">Tempo de qualidade com a família</li>
+          <li class="rhythm-item">Ioga ou mobilidade</li>
+          <li class="rhythm-item">Leitura</li>
+          <li class="rhythm-item">Exame de consciência</li>
         </ul>
       </div>
     </div>
-
-  </div>
-</section>
-
-<!-- THREAT MODEL -->
-<section id="ameacas">
-  <div class="s-eyebrow">Gestão de Risco</div>
-  <h2 class="s-title">Threat Model</h2>
-  <p class="s-lead">O que pode destruir o sistema por dentro. Os riscos críticos têm protocolos — os demais têm consciência.</p>
-
-  <div class="ameaca-list">
-
-    <div class="ameaca" onclick="toggleAmeaca(this)">
-      <div class="ameaca-header">
-        <span class="ameaca-id">T1</span>
-        <span class="ameaca-nome">Negligência Familiar por Ambição</span>
-        <span class="risk-tag risk-c">Crítico · Protocolo</span>
-        <span class="ameaca-chevron">▶</span>
-      </div>
-      <div class="ameaca-body">
-        <div class="ameaca-grid">
-          <div class="ameaca-box">
-            <div class="ameaca-box-label">Descrição</div>
-            <div class="ameaca-box-val">Trabalho e estudo consumindo o tempo e a presença que deveriam ir para a esposa e filhos. O problema não é ausência física — é ausência real.</div>
-          </div>
-          <div class="ameaca-box">
-            <div class="ameaca-box-label">Sinais de ativação</div>
-            <div class="ameaca-box-val">Filhos parando de buscar presença. Esposa reportando ausência emocional. Rituais familiares desaparecendo.</div>
-          </div>
-        </div>
-        <div class="protocolo-ativo">
-          <span class="protocolo-ativo-label">Protocolo ativo</span>
-          Se 2 ou mais indicadores aparecerem na mesma semana, todos os compromissos não-família e não-saúde são suspensos por 7 dias para recalibração.
-        </div>
-      </div>
-    </div>
-
-    <div class="ameaca" onclick="toggleAmeaca(this)">
-      <div class="ameaca-header">
-        <span class="ameaca-id">T2</span>
-        <span class="ameaca-nome">Degradação Espiritual Silenciosa</span>
-        <span class="risk-tag risk-c">Crítico · Protocolo</span>
-        <span class="ameaca-chevron">▶</span>
-      </div>
-      <div class="ameaca-body">
-        <div class="ameaca-grid">
-          <div class="ameaca-box">
-            <div class="ameaca-box-label">Descrição</div>
-            <div class="ameaca-box-val">Erosão gradual da prática contemplativa. O primeiro sistema a ser sacrificado e o último a ser percebido quando degradado.</div>
-          </div>
-          <div class="ameaca-box">
-            <div class="ameaca-box-label">Sinais de ativação</div>
-            <div class="ameaca-box-val">Reatividade emocional crescente. Decisões impulsivas. Sensação de estar perdido sem saber por quê.</div>
-          </div>
-        </div>
-        <div class="protocolo-ativo">
-          <span class="protocolo-ativo-label">Protocolo ativo</span>
-          Se a meditação matinal for omitida por 3 dias consecutivos, o dia seguinte começa com 30 minutos de contemplação — sem negociação, sem substituição.
-        </div>
-      </div>
-    </div>
-
-    <div class="ameaca" onclick="toggleAmeaca(this)">
-      <div class="ameaca-header">
-        <span class="ameaca-id">T3</span>
-        <span class="ameaca-nome">Burnout Silencioso</span>
-        <span class="risk-tag risk-h">Alto</span>
-        <span class="ameaca-chevron">▶</span>
-      </div>
-      <div class="ameaca-body">
-        <div class="ameaca-grid">
-          <div class="ameaca-box">
-            <div class="ameaca-box-label">Descrição</div>
-            <div class="ameaca-box-val">Acúmulo progressivo de demandas sem recuperação adequada. Instala-se devagar, mascarado de produtividade.</div>
-          </div>
-          <div class="ameaca-box">
-            <div class="ameaca-box-label">Sinais de ativação</div>
-            <div class="ameaca-box-val">Irritabilidade crescente. Queda de motivação sem causa óbvia. Treino abandonado por "falta de energia".</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="ameaca" onclick="toggleAmeaca(this)">
-      <div class="ameaca-header">
-        <span class="ameaca-id">T4</span>
-        <span class="ameaca-nome">Dispersão de Foco</span>
-        <span class="risk-tag risk-h">Alto</span>
-        <span class="ameaca-chevron">▶</span>
-      </div>
-      <div class="ameaca-body">
-        <div class="ameaca-grid">
-          <div class="ameaca-box">
-            <div class="ameaca-box-label">Descrição</div>
-            <div class="ameaca-box-val">Múltiplos estudos e projetos simultâneos, nunca atingindo profundidade suficiente para competência rara.</div>
-          </div>
-          <div class="ameaca-box">
-            <div class="ameaca-box-label">Sinais de ativação</div>
-            <div class="ameaca-box-val">Mais de 2 áreas de estudo ativas ao mesmo tempo. Abandono de projetos antes de concluí-los.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="ameaca" onclick="toggleAmeaca(this)">
-      <div class="ameaca-header">
-        <span class="ameaca-id">T5</span>
-        <span class="ameaca-nome">Desvio de Valores por Pressão Social</span>
-        <span class="risk-tag risk-h">Alto</span>
-        <span class="ameaca-chevron">▶</span>
-      </div>
-      <div class="ameaca-body">
-        <div class="ameaca-grid">
-          <div class="ameaca-box">
-            <div class="ameaca-box-label">Descrição</div>
-            <div class="ameaca-box-val">Concessões pequenas que redefinem quem você é. O desejo de agradar como vetor de corrosão silenciosa.</div>
-          </div>
-          <div class="ameaca-box">
-            <div class="ameaca-box-label">Sinais de ativação</div>
-            <div class="ameaca-box-val">Sentimento de inautenticidade. Ações que envergonhariam o homem do necrológio.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- PROTOCOLOS DE DECISÃO -->
-<section id="decisoes">
-  <div class="s-eyebrow">Filtros de Julgamento</div>
-  <h2 class="s-title">Protocolos de Decisão</h2>
-  <p class="s-lead">Filtros para os momentos em que o julgamento pode ser sequestrado pela urgência ou pelo desejo.</p>
-
-  <div class="decisoes">
-
-    <div class="decisao" onclick="toggleDecisao(this)">
-      <div class="decisao-header">
-        <span class="decisao-id">DR-01</span>
-        <span class="decisao-nome">Aceitar uma Oferta ou Projeto</span>
-        <span class="decisao-chevron">▶</span>
-      </div>
-      <div class="decisao-body">
-        <ul class="filtro-steps">
-          <li class="filtro-step"><span class="step-n">01</span><span class="step-t">Isso aproxima ou afasta da trilha de Security Architecture e da construção de autoridade real?</span></li>
-          <li class="filtro-step"><span class="step-n">02</span><span class="step-t">Isso respeita ou invade o tempo da família?</span></li>
-          <li class="filtro-step"><span class="step-n">03</span><span class="step-t">Está alinhado com o modelo autônomo e sereno de 2030?</span></li>
-          <li class="filtro-step"><span class="step-n">04</span><span class="step-t">A remuneração permite manter o ritmo de aportes anuais?</span></li>
-          <li class="filtro-step"><span class="step-n">05</span><span class="step-t">Eu me envergonharia de aceitar diante do homem do meu necrológio?</span></li>
-        </ul>
-        <div class="decisao-regra">3 ou mais respostas negativas = não aceitar. Dúvida nas perguntas 2 ou 5 = não.</div>
-      </div>
-    </div>
-
-    <div class="decisao" onclick="toggleDecisao(this)">
-      <div class="decisao-header">
-        <span class="decisao-id">DR-02</span>
-        <span class="decisao-nome">Hierarquia em Conflito</span>
-        <span class="decisao-chevron">▶</span>
-      </div>
-      <div class="decisao-body">
-        <ul class="filtro-steps">
-          <li class="filtro-step"><span class="step-n">1º</span><span class="step-t">Saúde emergencial</span></li>
-          <li class="filtro-step"><span class="step-n">2º</span><span class="step-t">Família — crise ou compromisso com filhos e cônjuge</span></li>
-          <li class="filtro-step"><span class="step-n">3º</span><span class="step-t">Contemplação matinal — mínimo 15 min (inegociável)</span></li>
-          <li class="filtro-step"><span class="step-n">4º</span><span class="step-t">Trabalho com prazo real e consequências concretas</span></li>
-          <li class="filtro-step"><span class="step-n">5º</span><span class="step-t">Estudo técnico e filosófico</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="decisao" onclick="toggleDecisao(this)">
-      <div class="decisao-header">
-        <span class="decisao-id">DR-03</span>
-        <span class="decisao-nome">Dizer Não a Demandas de Tempo</span>
-        <span class="decisao-chevron">▶</span>
-      </div>
-      <div class="decisao-body">
-        <ul class="filtro-steps">
-          <li class="filtro-step"><span class="step-n">01</span><span class="step-t">Isso é dever ou preferência de outro?</span></li>
-          <li class="filtro-step"><span class="step-n">02</span><span class="step-t">Se aceitar, o que perco nos próximos 7 dias?</span></li>
-          <li class="filtro-step"><span class="step-n">03</span><span class="step-t">Eu aceitaria isso amanhã de manhã, no pico da minha energia?</span></li>
-        </ul>
-        <div class="decisao-regra">"Obrigado pelo convite, mas não consigo assumir isso agora." Sem explicações longas.</div>
-      </div>
-    </div>
-
-    <div class="decisao" onclick="toggleDecisao(this)">
-      <div class="decisao-header">
-        <span class="decisao-id">DR-04</span>
-        <span class="decisao-nome">A Página que Faltava — O Que Cedo</span>
-        <span class="decisao-chevron">▶</span>
-      </div>
-      <div class="decisao-body">
-        <p style="font-size: 0.88rem; color: var(--ink-soft); font-weight: 300; line-height: 1.8; margin-bottom: 1.25rem;">Todo sistema de valores real exige saber o que se sacrifica quando a vida força uma escolha. Este é o meu mapa de renúncias conscientes:</p>
-        <div class="renuncias">
-          <div class="renuncia"><span class="renuncia-sujeito">Avanço na carreira</span> cede para presença familiar real. Sempre.</div>
-          <div class="renuncia"><span class="renuncia-sujeito">Estudo técnico</span> cede para contemplação matinal quando o tempo é escasso.</div>
-          <div class="renuncia"><span class="renuncia-sujeito">Metas financeiras anuais</span> cedem para saúde emergencial — minha ou da família.</div>
-          <div class="renuncia"><span class="renuncia-sujeito">Aprovação social</span> cede para integridade com os próprios valores — sempre e sem drama.</div>
-          <div class="renuncia"><span class="renuncia-sujeito">Produtividade de curto prazo</span> cede para recuperação real quando o corpo sinaliza colapso iminente.</div>
-        </div>
-        <p class="renuncias-nota">Este mapa não é fraqueza — é clareza. Sistemas sem mapa de renúncias são sistemas que desmoronam silenciosamente quando a vida força a escolha.</p>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- HORIZONTE 2030 -->
-<section id="horizonte">
-  <div class="s-eyebrow">Visão de Longo Prazo</div>
-  <h2 class="s-title">Horizonte 2030</h2>
-  <p class="s-lead">Dois projetos estruturais. Uma prioridade de cada vez. O horizonte orienta — o presente decide.</p>
-
-  <div class="projeto">
-    <div class="projeto-header">
-      <div class="projeto-tag">Especialização · Segurança</div>
-      <div class="projeto-titulo">Especialização em Security Architecture</div>
-      <div class="projeto-escopo">Aprofundar Security Architecture moderna, publicar perspectiva própria sobre Zero Trust, Cloud e IA, e transformar conhecimento técnico em autoridade reconhecida e renda autônoma.</div>
-    </div>
-    <div class="projeto-body">
-      <div class="fases">
-
-        <div class="fase">
-          <span class="fase-ano">2026</span>
-          <div class="fase-categorias">
-            <div class="fase-cat">
-              <span class="fase-cat-label">Leituras</span>
-              <div class="fase-cat-itens">
-                <span>The Linux Command Line <span class="fase-cat-autor">— William Shotts</span></span>
-                <span>Container Security <span class="fase-cat-autor">— Liz Rice</span></span>
-                <span>Zero Trust Networks <span class="fase-cat-autor">— Gilman &amp; Barth</span></span>
-                <span>The Staff Engineer's Path <span class="fase-cat-autor">— Tanya Reilly</span></span>
-              </div>
-            </div>
-            <div class="fase-cat">
-              <span class="fase-cat-label">Publicação</span>
-              <div class="fase-cat-itens">
-                <span>1º artigo técnico de perspectiva própria</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="fase">
-          <span class="fase-ano">2027</span>
-          <div class="fase-categorias">
-            <div class="fase-cat">
-              <span class="fase-cat-label">Leituras</span>
-              <div class="fase-cat-itens">
-                <span>Hacking Kubernetes <span class="fase-cat-autor">— Rice &amp; Hausenblas</span></span>
-                <span>Cloud Security <span class="fase-cat-autor">— a definir conforme trilha</span></span>
-              </div>
-            </div>
-            <div class="fase-cat">
-              <span class="fase-cat-label">Certificação</span>
-              <div class="fase-cat-itens">
-                <span>CCSP <span class="fase-cat-autor">— ISC²</span></span>
-                <span>ou SABSA Foundation</span>
-              </div>
-            </div>
-            <div class="fase-cat">
-              <span class="fase-cat-label">Publicação</span>
-              <div class="fase-cat-itens">
-                <span>≥ 3 artigos publicados (acumulado)</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="fase">
-          <span class="fase-ano">2028</span>
-          <div class="fase-categorias">
-            <div class="fase-cat">
-              <span class="fase-cat-label">Leitura</span>
-              <div class="fase-cat-itens">
-                <span>Security Engineering <span class="fase-cat-autor">— Ross Anderson</span></span>
-              </div>
-            </div>
-            <div class="fase-cat">
-              <span class="fase-cat-label">Publicação</span>
-              <div class="fase-cat-itens">
-                <span>Perspectiva IA + Segurança publicada</span>
-              </div>
-            </div>
-            <div class="fase-cat">
-              <span class="fase-cat-label">Marcos</span>
-              <div class="fase-cat-itens">
-                <span>Primeiro advisory externo</span>
-                <span>Renda autônoma ≥ 10% da renda total</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="fase">
-          <span class="fase-ano">2030</span>
-          <div class="fase-categorias">
-            <div class="fase-cat">
-              <span class="fase-cat-label">Posição</span>
-              <div class="fase-cat-itens">
-                <span>Arquiteto Sênior reconhecido publicamente</span>
-              </div>
-            </div>
-            <div class="fase-cat">
-              <span class="fase-cat-label">Renda</span>
-              <div class="fase-cat-itens">
-                <span>Escrita técnica e advisory gerando renda complementar consistente</span>
-              </div>
-            </div>
-            <div class="fase-cat">
-              <span class="fase-cat-label">Modo</span>
-              <div class="fase-cat-itens">
-                <span>Modelo autônomo de trabalho consolidado</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
   </div>
 
-  <div class="projeto">
-    <div class="projeto-header">
-      <div class="projeto-tag">Finanças · Autonomia</div>
-      <div class="projeto-titulo">Autonomia Financeira e Casa Própria</div>
-      <div class="projeto-escopo">Estruturar capital, aportes consistentes e previsibilidade financeira para viabilizar casa própria e liberdade de escolha profissional em 2030.</div>
-    </div>
-    <div class="projeto-body">
-      <div class="fases">
-        <div class="fase">
-          <span class="fase-ano">2026</span>
-          <span class="fase-texto">R$ 50k aportados · revisão mensal · plano de casa validado · reserva de emergência consolidada</span>
-        </div>
-        <div class="fase">
-          <span class="fase-ano">2027–28</span>
-          <span class="fase-texto">Renda técnica crescente · primeiro produto digital estruturado · aportes ≥ R$ 60k/ano</span>
-        </div>
-        <div class="fase">
-          <span class="fase-ano">2029–30</span>
-          <span class="fase-texto">Casa própria adquirida · renda passiva ≥ 30% da renda total · modelo autônomo de trabalho</span>
-        </div>
-      </div>
-    </div>
-  </div>
+</div>
 
-</section>
+<div class="obit-section" id="legado">
+  <p class="label">O Legado</p>
 
-<!-- RITMO DIÁRIO -->
-<section id="rotina">
-  <div class="s-eyebrow">A Arquitetura do Dia</div>
-  <h2 class="s-title">Ritmo Diário</h2>
-  <p class="s-lead">O ritmo que torna os valores visíveis.</p>
-
-  <div class="ritual">
-    <div class="ritual-item">
-      <span class="ritual-period">A Manhã</span>
-      <span class="ritual-acts">
-        Contemplação e meditação · Diário filosófico · Estudo técnico ou filosófico — Deep Work · Treino · Café e primeira refeição
-        <span class="ritual-note">A manhã pertence ao essencial. O mundo ainda não pediu nada.</span>
-      </span>
-    </div>
-    <div class="ritual-item">
-      <span class="ritual-period">O Dia</span>
-      <span class="ritual-acts">
-        Tarefa mais difícil primeiro · Almoço à mesa, sem telas · Pausa e caminhada · Fechamento e revisão do dia
-        <span class="ritual-note">Concentração em uma única atividade. Flow ou nada.</span>
-      </span>
-    </div>
-    <div class="ritual-item">
-      <span class="ritual-period">A Noite</span>
-      <span class="ritual-acts">
-        Jantar em família à mesa · Ioga ou mobilidade · Literatura · Exame de consciência
-        <span class="ritual-note">Família primeiro, sempre.</span>
-      </span>
-    </div>
-  </div>
-
-  <div class="inviolaveis">
-    <div class="inviolaveis-titulo">Invioláveis — sem exceção</div>
-    <div class="inviolavel">Meditação matinal — sem exceção</div>
-    <div class="inviolavel">Jantar em família — mínimo 5 noites/semana</div>
-    <div class="inviolavel">Sono antes das 23h</div>
-    <div class="inviolavel">Treino — ao menos 4 sessões/semana</div>
-    <div class="inviolavel">Sem reclamações — nunca, em nenhum contexto</div>
-  </div>
-</section>
-
-<!-- LEGADO -->
-<div id="legado">
-  <div class="legado-eyebrow">O Legado · Necrológio</div>
-  <div class="legado-texto">
+  <div class="obit-text">
     <p>Hoje partiu um homem que fez da serenidade sua fortaleza e da busca pela Verdade, pelo Bem e pelo Belo a direção de toda a sua vida.</p>
-    <p>Em cada alegria, manteve o coração firme e agradecido, sem se perder em euforias vazias. Em cada tristeza, sustentou a dignidade silenciosa dos que sabem que tudo é passageiro sob o olhar eterno.</p>
-    <p>Cultivou o corpo com disciplina tranquila. Alimentou o espírito através da meditação, da contemplação e da leitura profunda. Amou a simplicidade como quem descobre nela a verdadeira grandeza: a lareira acesa, a música preenchendo o ar, as conversas e os silêncios partilhados com a esposa e os filhos — Victor Hugo e Isadora — foram seus maiores tesouros.</p>
-    <p>Profissionalmente, usou seu talento e seu conhecimento para servir ao bem comum, com ética inegociável e espírito elevado. Construiu autoridade real no campo da segurança — não pela ostentação de títulos, mas pela profundidade do pensamento e pela generosidade de quem compartilha o que aprendeu.</p>
-    <p>Cultivou amizades verdadeiras onde o pensamento se aguçava no encontro. Nunca confundiu solidão produtiva com ausência de vínculos. Soube que as ideias mais vivas nascem na conversa.</p>
-    <p>Nunca procurou glórias fugazes, mas a felicidade de quem caminha fiel a si mesmo. E ao partir, deixou atrás de si não apenas lembranças, mas exemplos vivos: da serenidade que não se compra, da retidão que não se negocia, da beleza que se cultiva de dentro para fora.</p>
-  </div>
-  <div class="legado-final">"Hoje, como sempre, escolho a Verdade, o Bem e o Belo."<br><span style="font-size: 0.9rem; font-style: italic; color: var(--ink-dim);">Viveu como rezava.</span></div>
-</div>
 
-<!-- FOOTER -->
-<footer>
-  <p class="footer-q">Isso está alinhado com o homem que quero ser no meu necrológio?</p>
-  <p class="footer-meta">Life OS · v3.0 · 2026-04-06</p>
-</footer>
+    <p>Em cada alegria, manteve o coração firme e agradecido, sem se perder em euforias vazias. Em cada tristeza, sustentou a dignidade silenciosa dos que sabem que tudo é passageiro sob o olhar eterno.</p>
+
+    <p>Seu caminho foi de <em>austeridade alegre</em>: cuidou do corpo com disciplina tranquila, da mente como quem afina um instrumento, e do espírito pela meditação, pela música elevada, pela leitura profunda e pela construção de vínculos autênticos. Amou a simplicidade como quem descobre nela a verdadeira grandeza.</p>
+
+    <p>Fez da sua casa um abrigo de beleza serena. As conversas e os silêncios partilhados com a esposa e com os filhos — <em>Victor Hugo e Isadora</em> — foram seus maiores tesouros. Esteve presente de fato. Eles sabiam disso.</p>
+
+    <p>Profissionalmente, usou seu talento para servir ao bem comum, sempre com ética inegociável e espírito elevado. Construiu autoridade real no campo da segurança — não pela ostentação de títulos, mas pela profundidade do pensamento e pela generosidade de quem compartilha o que aprendeu. Criou com as próprias mãos uma forma de trabalho que respeitava sua alma: escreveu, assessorou, pensou — e transmitiu mais que técnica, transmitiu valores.</p>
+
+    <p>Nunca procurou glórias fugazes, mas a felicidade de quem caminha fiel a si mesmo. Ao partir, deixou atrás de si não apenas lembranças, mas <em>exemplos vivos</em>: da serenidade que não se compra, da retidão que não se negocia, da beleza que se cultiva de dentro para fora.</p>
+
+    <p>Viveu como rezava. E mesmo agora, ao deixar este mundo, seu legado é um sussurro firme aos que ficam: <em>permaneçam fiéis ao que é verdadeiro, bom e belo. Sempre.</em></p>
+  </div>
+
+  <p class="closing">A pergunta que precedeu cada escolha</p>
+  <p class="motto">"Hoje, como sempre, escolho a Verdade, o Bem e o Belo."</p>
+  <p class="version">Life OS · v6.0 · 2026-04-06</p>
+</div>
 
 <script>
-// ── LOCK ──
-(function() {
-  const HASH = 'dcba5b564cd9fe7812e82ed2d80603446a4e5da87cc9c2b51d9f9c2a51d7a70f';
-  async function sha256(msg) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-  }
-  const SK = 'lifeos_unlocked';
-  const saved = sessionStorage.getItem(SK);
-  if (saved && Date.now() - parseInt(saved) < 8 * 60 * 60 * 1000) {
-    document.getElementById('lock').classList.add('gone');
-  }
-  window.unlock = async function() {
-    const inp = document.getElementById('lockInput');
-    const h = await sha256(inp.value.trim());
-    if (h === HASH) {
-      sessionStorage.setItem(SK, Date.now().toString());
+  // ── LOCK ──
+  (function() {
+    const HASH = 'dcba5b564cd9fe7812e82ed2d80603446a4e5da87cc9c2b51d9f9c2a51d7a70f';
+    async function sha256(msg) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+    const SK = 'lifeos_unlocked';
+    const saved = sessionStorage.getItem(SK);
+    if (saved && Date.now() - parseInt(saved) < 8 * 60 * 60 * 1000) {
       document.getElementById('lock').classList.add('gone');
-    } else {
-      inp.classList.add('err');
-      inp.value = '';
-      setTimeout(() => inp.classList.remove('err'), 500);
-      inp.focus();
     }
-  };
-  document.addEventListener('DOMContentLoaded', () => {
-    const i = document.getElementById('lockInput');
-    if (i) i.addEventListener('keydown', e => { if (e.key === 'Enter') window.unlock(); });
-  });
-})();
+    window.unlock = async function() {
+      const inp = document.getElementById('lockInput');
+      const h = await sha256(inp.value.trim());
+      if (h === HASH) {
+        sessionStorage.setItem(SK, Date.now().toString());
+        document.getElementById('lock').classList.add('gone');
+      } else {
+        inp.classList.add('err');
+        inp.value = '';
+        setTimeout(() => inp.classList.remove('err'), 500);
+        inp.focus();
+      }
+    };
+    document.addEventListener('DOMContentLoaded', () => {
+      const i = document.getElementById('lockInput');
+      if (i) i.addEventListener('keydown', e => { if (e.key === 'Enter') window.unlock(); });
+    });
+  })();
 
-// ── TOGGLES ──
-function toggle(el) { el.classList.toggle('open'); }
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('show', scrollY > window.innerHeight * 0.5);
+  }, { passive: true });
 
-function togglePapel(el) {
-  const isOpen = el.classList.contains('open');
-  document.querySelectorAll('.papel').forEach(p => p.classList.remove('open'));
-  if (!isOpen) el.classList.add('open');
-}
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const d = +e.target.dataset.d || 0;
+        setTimeout(() => e.target.classList.add('in'), d);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
 
-function toggleOkr(el) { el.classList.toggle('open'); }
-function toggleAmeaca(el) { el.classList.toggle('open'); }
-function toggleDecisao(el) { el.classList.toggle('open'); }
-
-// ── NAV ACTIVE ──
-const sections = document.querySelectorAll('section, #legado');
-const navLinks = document.querySelectorAll('.nav-links a');
-
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      navLinks.forEach(a => {
-        a.classList.remove('active');
-        if (a.getAttribute('href') === '#' + e.target.id) a.classList.add('active');
-      });
-    }
-  });
-}, { threshold: 0.2 });
-
-sections.forEach(s => obs.observe(s));
-
-// ── SMOOTH SCROLL ──
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    e.preventDefault();
-    const t = document.querySelector(a.getAttribute('href'));
-    if (t) window.scrollTo({ top: t.offsetTop - 58, behavior: 'smooth' });
-  });
-});
+  document.querySelectorAll('.role').forEach((el, i) => { el.dataset.d = i * 80; io.observe(el); });
+  document.querySelectorAll('.okr').forEach((el, i) => { el.dataset.d = i * 70; io.observe(el); });
+  document.querySelectorAll('.threat').forEach((el, i) => { el.dataset.d = i * 60; io.observe(el); });
 </script>
 </body>
 </html>
